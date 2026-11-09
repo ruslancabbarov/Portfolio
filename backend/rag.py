@@ -8,7 +8,7 @@ import google.generativeai as genai
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# .env faylından environment dəyişənlərini yükləyirik
+# Environment dəyişənlərini yükləyirik
 load_dotenv()
 
 DATA_PATH = Path(__file__).parent / "data" / "profile.json"
@@ -18,11 +18,9 @@ TOP_K = 2
 
 GITHUB_USER = os.getenv("GITHUB_USER", "ruslancabbarov")
 GITHUB_TOPIC = "portfolio"
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
-# Gemini API-nı konfiqurasiya edirik
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
+def get_api_key():
+    return os.getenv("GEMINI_API_KEY", "")
 
 def load_github_chunks():
     """GitHub-da 'portfolio' topic-i olan public repoları chunk-a çevirir."""
@@ -85,7 +83,6 @@ class PortfolioRAG:
             analyzer="char_wb", ngram_range=(3, 5), lowercase=True
         )
         self.matrix = self.vectorizer.fit_transform(self.corpus)
-        self.model = genai.GenerativeModel("gemini-1.5-flash")
 
     def answer(self, question: str) -> dict:
         q_vec = self.vectorizer.transform([question])
@@ -119,15 +116,22 @@ KONTEKST:
 İstifadəçinin Sualı: {question}
 """
 
+        api_key = get_api_key()
+        if not api_key:
+            return {
+                "answer": "GEMINI_API_KEY Render mühitində tapılmadı. Lütfən Render-də Environment Variables hissəsini yoxlayın.",
+                "sources": sources,
+                "score": round(best_score, 3)
+            }
+
         try:
-            response = self.model.generate_content(system_prompt)
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel("gemini-1.5-flash")
+            response = model.generate_content(system_prompt)
             ai_answer = response.text
         except Exception as e:
-            print(f"Gemini Error: {e}")
-            if context and best_score >= MIN_SCORE:
-                ai_answer = f"Ruslan haqqında məlumat: {context}"
-            else:
-                ai_answer = "Mən Ruslanın assistentiyəm. Ruslan haqqında layihələr, bacarıqlar və təcrübələr barədə istənilən sualı verə bilərsiniz!"
+            print(f"Gemini LLM Call Error: {e}")
+            ai_answer = f"Gemini API xətası baş verdi ({str(e)}). Lütfən API Key-in düzgünlüyünü yoxlayın."
 
         return {
             "answer": ai_answer,
