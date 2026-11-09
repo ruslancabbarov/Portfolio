@@ -1,5 +1,4 @@
-// Render backend canlı URL ünvanı
-const BACKEND_URL = "https://portfolio-82lh.onrender.com"; // Render-dəki backend canlı domenin
+const BACKEND_URL = "https://portfolio-1uj6.onrender.com"; 
 
 function toggleChatbot() {
     const modal = document.getElementById("chatbotModal");
@@ -17,7 +16,7 @@ async function sendMessage() {
     const messageText = inputField.value.trim();
     if (!messageText) return;
 
-    // İstifadəçinin mesajını ekrana əlavə et
+    // 1. İstifadəçinin mesajını göstər
     const userBubble = document.createElement("div");
     userBubble.className = "bg-emerald-500/20 text-emerald-300 p-3 rounded-xl max-w-[85%] ml-auto border border-emerald-500/30 text-right";
     userBubble.innerText = messageText;
@@ -26,7 +25,7 @@ async function sendMessage() {
     inputField.value = "";
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-    // Yüklənir indikatoru
+    // 2. Yüklənir mesajı
     const loadingBubble = document.createElement("div");
     loadingBubble.id = "botLoading";
     loadingBubble.className = "bg-slate-800/60 text-slate-400 p-3 rounded-xl max-w-[85%] border border-slate-700/50 italic";
@@ -35,44 +34,45 @@ async function sendMessage() {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
     try {
-        const response = await fetch(`${BACKEND_URL}/chat`, {
+        const response = await fetch(`${BACKEND_URL}/api/chat`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Accept": "application/json"
             },
-            body: JSON.stringify({
-                message: messageText,
-                query: messageText
-            })
+            body: JSON.stringify({ message: messageText })
         });
 
-        const data = await response.json();
-        
-        // Loading mesajını sil
         const loadingNode = document.getElementById("botLoading");
         if (loadingNode) loadingNode.remove();
 
-        // Bot cavabı
+        if (!response.ok) {
+            throw new Error(`Server status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Backend-dən gələn cavabı çıxarırıq (rag.py dict qaytarır: {"answer": "...", ...})
+        let answerText = "";
+        if (typeof data === "string") {
+            answerText = data;
+        } else if (typeof data === "object" && data !== null) {
+            answerText = data.answer || data.response || data.reply || data.message || JSON.stringify(data);
+        }
+
         const botBubble = document.createElement("div");
         botBubble.className = "bg-slate-800/60 text-slate-200 p-3 rounded-xl max-w-[85%] border border-slate-700/50";
-        
-        const answerText = data.response || data.answer || data.reply || data.message;
-        
-        if (answerText) {
-            botBubble.innerText = answerText;
-        } else {
-            botBubble.innerText = "Bu haqda mənə məlumat verilməyib, Ruslan ilə birbaşa əlaqə saxlaya bilərsiniz.";
-        }
-        
+        botBubble.innerText = answerText || "Məlumat tapılmadı.";
         messagesContainer.appendChild(botBubble);
 
     } catch (error) {
+        console.error("Chat Error:", error);
         const loadingNode = document.getElementById("botLoading");
         if (loadingNode) loadingNode.remove();
 
         const errorBubble = document.createElement("div");
         errorBubble.className = "bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[85%] border border-red-500/30";
-        errorBubble.innerText = "Bağlantı xətası baş verdi. Lütfən bir qədər sonra yenidən cəhd edin.";
+        errorBubble.innerText = "Sistem oyanır və ya xəta baş verdi. Zəhmət olmasa bir neçə saniyə sonra yenidən cəhd edin.";
         messagesContainer.appendChild(errorBubble);
     }
     
