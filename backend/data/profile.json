@@ -1,18 +1,74 @@
 {
   "chunks": [
-    "Name: Ruslan Cabbarov. Title: Model Validation & Credit Risk Analyst (Intern) | Data Scientist. Location: Baku, Azerbaijan. Contact: +994 51 476 70 25, ruslaanc0000@gmail.com, GitHub: github.com/ruslancabbarov, LinkedIn: linkedin.com/in/ruslan-cabbarov.",
-    "Education: Bachelor of Business Administration at Azerbaijan State University of Economics (UNEC), Sep 2023 - Present, GPA 85/100. Data Science Program at Div Academy, Oct 2025 - May 2026.",
-    "Certifications and Programs: IBM Data Science Professional Certificate (Credly Verified Digital Badge), McKinsey Forward Program Participant, Coursera via Milli Proqram Initiative.",
-    "Languages: Azerbaijani (Native), English (B2 - Academic / Technical Reading & Writing), Turkish (B2).",
-    "Model Risk & Validation Skills: Credit risk scoring (PD, LGD, EAD), IFRS 9, Basel III, validation tests (discrimination, calibration, stability, backtesting), SHAP explainability, data quality checks, validation reports and working papers.",
-    "Technical Skills: Python (Pandas, NumPy, Scikit-learn, LightGBM, XGBoost), SQL (PostgreSQL, Supabase), Statistics, Excel, Git, GitHub, FastAPI, Docker, Streamlit, Jupyter, Matplotlib, Seaborn, Plotly, Windows Task Scheduler.",
-    "Generative AI & LLM Skills: Prompt writing, RAG (Retrieval-Augmented Generation), AI agents, Gemini API, Telegram Bot API, Transformer NLP (XLM-RoBERTa, TF-IDF).",
-    "Projects - Credit Risk Assessment System: Built a credit scoring model on 307,511 loan applications with LightGBM (AUC-ROC: 0.78, Gini: 0.56). Engineered 72 features from 406 raw inputs, implemented a 3-tier decision rule and SHAP explanations in line with Basel III. Deployed with FastAPI, Streamlit, Supabase PostgreSQL, Docker, and Render.",
-    "Projects - Multilingual Text Classification (DataRace / MSİM competition): Built an ensemble of TF-IDF and XLM-RoBERTa for Azerbaijani, Russian, and English texts. Public leaderboard score ~0.9166.",
-    "Projects - Fraud Detection API: XGBoost model with AUC 0.998 and 96% recall. Served as a real-time REST API via FastAPI.",
-    "Projects - Employee Churn & California House Prices: Random Forest with 98% accuracy for churn prediction; Lasso regression for house price analysis.",
-    "Projects - Gmail AI Summarizer & Telegram Bot: Automated Python system summarizing unread emails using Gemini API and sending to Telegram every 3 hours.",
-    "Experience - Local Head of Global Internships at AIESEC in Azerbaijan (Feb 2026 - May 2026): Led team of 5, tracked KPIs, solved application-to-realization bottlenecks with data.",
-    "Experience - Finance Operations Analyst (Remote) at AIESEC in Poland (Sep 2025 - Feb 2026): Analyzed spending across Local Committees, built SQL and Python reporting workflows, audited monthly financial reports."
+    {
+      "title": "Şəxsi Məlumatlar Və Əlaqə",
+      "keywords": "ruslan cabbarov contact email phone github linkedin location",
+      "text": "Name: Ruslan Cabbarov. Title: Model Validation & Credit Risk Analyst (Intern) | Data Scientist. Location: Baku, Azerbaijan. Phone: +994 51 476 70 25. Email: ruslaanc0000@gmail.com. GitHub: https://github.com/ruslancabbarov. LinkedIn: https://linkedin.com/in/ruslan-cabbarov."
+    },
+    {
+      "title": "Təhsil Haqqında Məlumat",
+      "keywords": "education unec azərbaycan dövlət iqtisad universiteti div academy gpa bachelor",
+      "text": "Education: Bachelor of Business Administration at Azerbaijan State University of Economics (UNEC), Baku, Azerbaijan (Sep 2023 - Present, GPA: 85/100). Completed Data Science Program at Div Academy, Baku, Azerbaijan (Oct 2025 - May 2026)."
+    },
+    {
+      "title": "Sertifikatlar Və Proqramlar",
+      "keywords": "certifications ibm data science credly mckinsey forward milli proqram coursera",
+      "text": "Certifications & Programs: IBM Data Science Professional Certificate (Credly Verified Digital Badge), McKinsey Forward Program Participant, Coursera courses via Milli Proqram Initiative."
+    },
+    {
+      "title": "Dillər Və Dil Bilikləri",
+      "keywords": "languages azerbaijani english ielts turkish",
+      "text": "Languages: Azerbaijani (Native), English (B2 level, Academic / Technical Reading & Writing), Turkish (B2 level)."
+    },
+    {
+      "title": "Model Validation Və Credit Risk Biliyi",
+      "keywords": "model risk validation credit risk pd lgd ead ifrs 9 basel iii shap backtesting calibration",
+      "text": "Model Risk & Validation Skills: Credit risk scoring (PD, LGD, EAD), IFRS 9, Basel III frameworks; validation tests including discrimination, calibration, stability, and backtesting; data quality checks, validation reports, working papers, and SHAP explainability."
+    },
+    {
+      "title": "Texniki Bacarıqlar Və Alətlər",
+      "keywords": "python sql postgresql lightgbm xgboost pandas scikit-learn fastapi docker streamlit git",
+      "text": "Technical Skills: Python (Pandas, NumPy, Scikit-learn, LightGBM, XGBoost), SQL (PostgreSQL, Supabase), Statistics, Excel, Git, GitHub, FastAPI, Docker, Streamlit, Jupyter, Matplotlib, Seaborn, Plotly, Windows Task Scheduler, Anaconda."
+    },
+    {
+      "title": "Generative AI Və LLM Biliyi",
+      "keywords": "gen ai llm rag prompt gemini api telegram bot transformers nlp xlm-roberta",
+      "text": "Gen AI & LLM Skills: Prompt writing, RAG (Retrieval-Augmented Generation), AI agents, Google Gemini API, Telegram Bot API, testing AI models for bias/accuracy, and Transformer NLP (XLM-RoBERTa, TF-IDF)."
+    },
+    {
+      "title": "Credit Risk Assessment System Layihəsi",
+      "keywords": "project credit risk scoring lightgbm shap fastapi docker supabase render basel iii",
+      "text": "Project - Credit Risk Assessment System: Developed a credit scoring model on 307,511 loan applications achieving AUC-ROC of 0.78 and Gini of 0.56. Engineered 72 features from 406 raw inputs, implemented a 3-tier decision rule and SHAP explainability in line with Basel III. Deployed as a live app using FastAPI, Streamlit, Supabase PostgreSQL, Docker, and Render."
+    },
+    {
+      "title": "Multilingual Text Classification Layihəsi",
+      "keywords": "project text classification datarace msim xlm-roberta tf-idf nlp",
+      "text": "Project - Multilingual Text Classification (DataRace / MSİM Competition): Built an ensemble of TF-IDF and XLM-RoBERTa for Azerbaijani, Russian, and English texts. Public leaderboard score reached ~0.9166."
+    },
+    {
+      "title": "Fraud Detection API Layihəsi",
+      "keywords": "project fraud detection xgboost fastapi recall rest api",
+      "text": "Project - Fraud Detection API: Built an XGBoost model with AUC 0.998 and 96% recall via feature engineering, served as a real-time REST API with FastAPI."
+    },
+    {
+      "title": "Employee Churn Və House Prices Layihəsi",
+      "keywords": "project churn random forest house prices lasso regression scikit-learn",
+      "text": "Project - Employee Churn Prediction & California House Prices: Random Forest model for churn with 98% accuracy (97% recall at risk); Lasso regression for house price analysis identifying median income as primary driver."
+    },
+    {
+      "title": "Gmail AI Summarizer Telegram Bot Layihəsi",
+      "keywords": "project gmail summarizer telegram bot gemini api automation task scheduler",
+      "text": "Project - Gmail AI Summarizer & Telegram Bot: Python automation agent using Google Gemini API, Telegram Bot API, and Windows Task Scheduler to summarize unread Gmail messages every 3 hours."
+    },
+    {
+      "title": "İş Təcrübəsi - AIESEC Azerbaijan",
+      "keywords": "experience aiesec in azerbaijan global internships kpi leadership",
+      "text": "Experience - Local Head of Global Internships at AIESEC in Azerbaijan (Feb 2026 - May 2026): Led a team of 5, tracked KPIs to optimize internship conversion funnel, solved application-to-realization bottlenecks with data-backed decisions."
+    },
+    {
+      "title": "İş Təcrübəsi - AIESEC Poland",
+      "keywords": "experience aiesec in poland finance operations remote sql python audit",
+      "text": "Experience - Finance Operations Analyst (Remote) at AIESEC in Poland (Sep 2025 - Feb 2026): Analyzed spending across Local Committees, created SQL and Python reporting workflows to eliminate manual data entry, audited and consolidated monthly financial reports."
+    }
   ]
 }
