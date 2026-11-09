@@ -2,19 +2,23 @@ import json
 import os
 import urllib.request
 from pathlib import Path
+from dotenv import load_dotenv
 
 from google import genai
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+# .env faylından environment dəyişənlərini yükləyirik
+load_dotenv()
+
 DATA_PATH = Path(__file__).parent / "data" / "profile.json"
 
-MIN_SCORE = 0.12  # Bu həddən aşağı = "məlumat yoxdur"
+MIN_SCORE = 0.12
 TOP_K = 2
 
 GITHUB_USER = os.getenv("GITHUB_USER", "ruslancabbarov")
 GITHUB_TOPIC = "portfolio"
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AQ.Ab8RN6Ihqe4O3LXSCdqlKHtum8TCpH2e_gxXcVp2ERKOqYlj3g")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 def load_github_chunks():
     """GitHub-da 'portfolio' topic-i olan public repoları chunk-a çevirir."""
