@@ -4,11 +4,11 @@ import urllib.request
 from pathlib import Path
 from dotenv import load_dotenv
 
-import google.generativeai as genai
+# Rəsmi yeni Google GenAI SDK
+from google import genai
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Environment dəyişənlərini yükləyirik
 load_dotenv()
 
 DATA_PATH = Path(__file__).parent / "data" / "profile.json"
@@ -18,9 +18,6 @@ TOP_K = 2
 
 GITHUB_USER = os.getenv("GITHUB_USER", "ruslancabbarov")
 GITHUB_TOPIC = "portfolio"
-
-def get_api_key():
-    return os.getenv("GEMINI_API_KEY", "")
 
 def load_github_chunks():
     """GitHub-da 'portfolio' topic-i olan public repoları chunk-a çevirir."""
@@ -116,22 +113,34 @@ KONTEKST:
 İstifadəçinin Sualı: {question}
 """
 
-        api_key = get_api_key()
+        api_key = os.getenv("GEMINI_API_KEY", "")
         if not api_key:
             return {
-                "answer": "GEMINI_API_KEY Render mühitində tapılmadı. Lütfən Render-də Environment Variables hissəsini yoxlayın.",
+                "answer": "GEMINI_API_KEY mühitdə tapılmadı. Lütfən Render-də Environment Variables bölməsini yoxlayın.",
                 "sources": sources,
                 "score": round(best_score, 3)
             }
 
         try:
-            genai.configure(api_key=api_key)
-            model = genai.GenerativeModel("gemini-1.5-flash")
-            response = model.generate_content(system_prompt)
+            # Yeni SDK Klienti (AQ.Ab8... açarları ilə 100% tam uyğundur)
+            client = genai.Client(api_key=api_key)
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=system_prompt,
+            )
             ai_answer = response.text
         except Exception as e:
-            print(f"Gemini LLM Call Error: {e}")
-            ai_answer = f"Gemini API xətası baş verdi ({str(e)}). Lütfən API Key-in düzgünlüyünü yoxlayın."
+            # Model adı gemini-2.5-flash tapılmazsa gemini-1.5-flash ilə fallback edirik
+            try:
+                client = genai.Client(api_key=api_key)
+                response = client.models.generate_content(
+                    model="gemini-1.5-flash",
+                    contents=system_prompt,
+                )
+                ai_answer = response.text
+            except Exception as err:
+                print(f"Gemini New SDK Error: {err}")
+                ai_answer = f"Gemini API xətası baş verdi: {str(err)}"
 
         return {
             "answer": ai_answer,
