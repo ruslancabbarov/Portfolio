@@ -4,7 +4,7 @@ import urllib.request
 from pathlib import Path
 from dotenv import load_dotenv
 
-from google import genai
+import google.generativeai as genai
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -20,6 +20,10 @@ GITHUB_USER = os.getenv("GITHUB_USER", "ruslancabbarov")
 GITHUB_TOPIC = "portfolio"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
+# Gemini API-nı konfiqurasiya edirik
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+
 def load_github_chunks():
     """GitHub-da 'portfolio' topic-i olan public repoları chunk-a çevirir."""
     url = f"https://api.github.com/users/{GITHUB_USER}/repos?per_page=100&sort=updated"
@@ -32,7 +36,7 @@ def load_github_chunks():
         with urllib.request.urlopen(req, timeout=8) as r:
             repos = json.load(r)
     except Exception:
-        return []  # GitHub əlçatmazdırsa, yalnız JSON ilə işləyir
+        return []
 
     chunks = []
     for r in repos:
@@ -58,7 +62,6 @@ def load_github_chunks():
 
 class PortfolioRAG:
     def __init__(self, path: Path = DATA_PATH):
-        # Local JSON chunk-ları ilə GitHub repolarını birləşdiririk
         try:
             with open(path, encoding="utf-8") as f:
                 json_chunks = json.load(f).get("chunks", [])
@@ -82,12 +85,9 @@ class PortfolioRAG:
             analyzer="char_wb", ngram_range=(3, 5), lowercase=True
         )
         self.matrix = self.vectorizer.fit_transform(self.corpus)
-
-        # Gemini Client-i təyin edirik
-        self.ai_client = genai.Client(api_key=GEMINI_API_KEY)
+        self.model = genai.GenerativeModel("gemini-1.5-flash")
 
     def answer(self, question: str) -> dict:
-        # 1. Retrieval: JSON və GitHub-dan ən uyğun 2 mətni tapırıq
         q_vec = self.vectorizer.transform([question])
         scores = cosine_similarity(q_vec, self.matrix).ravel()
         ranked = scores.argsort()[::-1][:TOP_K]
@@ -104,7 +104,6 @@ class PortfolioRAG:
             context = "\n\n".join(self.chunks[i]["text"] for i in picked)
             sources = [self.chunks[i]["title"] for i in picked]
 
-        # 2. Generation: RuslanAI System Prompt
         system_prompt = f"""
 Sənin adın RuslanAI-dır. Sən Data Scientist və Model Validation mütəxəssisi Ruslan Cabbarovun şəxsi AI assistentisən.
 Sənin vəzifən istifadəçilərin suallarına Ruslanın adından səmimi, peşəkar və dəqiq cavab verməkdir.
@@ -112,24 +111,23 @@ Sənin vəzifən istifadəçilərin suallarına Ruslanın adından səmimi, peş
 QAYDALAR:
 1. YALNIZ verilən Kontekst daxilindəki faktlara əsaslan. Kontekstdə olmayan məlumatı uydurma.
 2. Əgər kontekstdə sualın cavabı yoxdursa, nəzakətlə bildir ki: "Mən Ruslanın assistentiyəm, lakin bu haqda məndə dəqiq məlumat yoxdur. Ruslanla birbaşa LinkedIn və ya Email vasitəsilə əlaqə saxlaya bilərsiniz."
-3. İstifadəçi hansı dildə (Azərbaycan, İngilis və ya Rus) sual verərsə, həmin dildə cavab ver.
+3. İstifadəçi hansı dildə sual verərsə, həmin dildə cavab ver.
 
 KONTEKST:
 {context}
+
+İstifadəçinin Sualı: {question}
 """
 
         try:
-            response = self.ai_client.models.generate_content(
-                model="gemini-1.5-flash",
-                contents=f"{system_prompt}\n\nİstifadəçinin Sualı: {question}",
-            )
+            response = self.model.generate_content(system_prompt)
             ai_answer = response.text
         except Exception as e:
-            print(f"Gemini Generation Error: {e}")
-            if sources:
+            print(f"Gemini Error: {e}")
+            if context and best_score >= MIN_SCORE:
                 ai_answer = f"Ruslan haqqında məlumat: {context}"
             else:
-                ai_answer = "Mən Ruslanın assistentiyəm. Hazırda sistemdə qısa texniki fasilə var, zəhmət olmasa bir az sonra yenidən cəhd edin və ya Ruslanla birbaşa LinkedIn üzərindən əlaqə saxlayın."
+                ai_answer = "Mən Ruslanın assistentiyəm. Ruslan haqqında layihələr, bacarıqlar və təcrübələr barədə istənilən sualı verə bilərsiniz!"
 
         return {
             "answer": ai_answer,
