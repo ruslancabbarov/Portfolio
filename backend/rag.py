@@ -1,4 +1,4 @@
-import json
+json import edin
 import os
 import urllib.request
 from pathlib import Path
@@ -24,7 +24,7 @@ def load_github_chunks():
     """GitHub-da 'portfolio' topic-i olan public repoları chunk-a çevirir."""
     url = f"https://api.github.com/users/{GITHUB_USER}/repos?per_page=100&sort=updated"
     headers = {"User-Agent": "portfolio-rag"}
-    token = os.getenv("GITHUB_TOKEN")  # İxtiyari
+    token = os.getenv("GITHUB_TOKEN")
     if token:
         headers["Authorization"] = f"Bearer {token}"
     try:
@@ -59,11 +59,24 @@ def load_github_chunks():
 class PortfolioRAG:
     def __init__(self, path: Path = DATA_PATH):
         # Local JSON chunk-ları ilə GitHub repolarını birləşdiririk
-        with open(path, encoding="utf-8") as f:
-            self.chunks = json.load(f)["chunks"] + load_github_chunks()
+        try:
+            with open(path, encoding="utf-8") as f:
+                json_chunks = json.load(f).get("chunks", [])
+        except Exception:
+            json_chunks = []
+
+        self.chunks = json_chunks + load_github_chunks()
+
+        if not self.chunks:
+            self.chunks = [{
+                "id": "fallback",
+                "title": "Ruslan Cabbarov",
+                "keywords": "ruslan data science credit risk",
+                "text": "Ruslan Cabbarov UNEC tələbəsidir, Data Science və Credit Risk üzrə mütəxəssisdir."
+            }]
 
         self.corpus = [
-            f"{c['title']} {c['keywords']} {c['text']}" for c in self.chunks
+            f"{c.get('title', '')} {c.get('keywords', '')} {c.get('text', '')}" for c in self.chunks
         ]
         self.vectorizer = TfidfVectorizer(
             analyzer="char_wb", ngram_range=(3, 5), lowercase=True
@@ -94,7 +107,7 @@ class PortfolioRAG:
         # 2. Generation: RuslanAI System Prompt
         system_prompt = f"""
 Sənin adın RuslanAI-dır. Sən Data Scientist və Model Validation mütəxəssisi Ruslan Cabbarovun şəxsi AI assistentisən.
-Sənin vəzifən istifadəçilərin suallarına Ruslanın adından samimi, peşəkar və dəqiq cavab verməkdir.
+Sənin vəzifən istifadəçilərin suallarına Ruslanın adından səmimi, peşəkar və dəqiq cavab verməkdir.
 
 QAYDALAR:
 1. YALNIZ verilən Kontekst daxilindəki faktlara əsaslan. Kontekstdə olmayan məlumatı uydurma.
@@ -106,14 +119,18 @@ KONTEKST:
 """
 
         try:
+            # Model adı dürüstləşdirildi: gemini-1.5-flash
             response = self.ai_client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-1.5-flash",
                 contents=f"{system_prompt}\n\nİstifadəçinin Sualı: {question}",
             )
             ai_answer = response.text
         except Exception as e:
-            # API xətası olarsa (məsələn internet olmasa) fallback oxşar mətni qaytarır
-            ai_answer = context if sources else "Xəta baş verdi, zəhmət olmasa yenidən cəhd edin."
+            print(f"Gemini Generation Error: {e}")
+            if sources:
+                ai_answer = f"Ruslan haqqında məlumat: {context}"
+            else:
+                ai_answer = "Mən Ruslanın assistentiyəm. Hazırda sistemdə qısa texniki fasilə var, zəhmət olmasa bir az sonra yenidən cəhd edin və ya Ruslanla birbaşa LinkedIn üzərindən əlaqə saxlayın."
 
         return {
             "answer": ai_answer,
