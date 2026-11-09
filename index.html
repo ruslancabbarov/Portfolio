@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruslan Cabbarov | Data Scientist & ML Developer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            900: '#0a0f1d',
+                            800: '#0f172a',
+                            700: '#1e293b',
+                            600: '#334155'
+                        },
+                        emerald: {
+                            accent: '#10b981',
+                            glow: '#059669',
+                            dark: '#064e3b'
+                        },
+                        cyan: {
+                            accent: '#06b6d4',
+                            glow: '#0891b2'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0f1d;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism custom styling */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card-hover:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
+        }
+
+        .glass-nav {
+            background: rgba(10, 15, 29, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Gradient Glow Effects */
+        .radial-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 70%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #38bdf8 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0f1d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
+        }
+
+        /* Chatbot Pulse animation */
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+        }
+        .pulse-btn {
+            animation: subtlePulse 3s infinite;
+        }
+
+        /* Typing indicator */
+        .typing-dot {
+            animation: typingAnimation 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+            40% { opacity: 1; transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+
+    <!-- Background Glow Grid Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0 radial-glow"></div>
+    <div class="fixed top-1/4 -left-48 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed bottom-1/4 -right-48 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-40 glass-nav px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 p-[1px]">
+                    <div class="w-full h-full bg-navy-900 rounded-[11px] flex items-center justify-center font-bold font-mono text-emerald-400">
+                        RC
+                    </div>
+                </div>
+                <span class="font-bold text-lg tracking-tight text-slate-100 group-hover:text-emerald-400 transition-colors">
+                    Ruslan<span class="text-emerald-400 font-mono">.ds</span>
+                </span>
+            </a>
+
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#about" class="hover:text-emerald-400 transition-colors">About</a>
+                <a href="#skills" class="hover:text-emerald-400 transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-emerald-400 transition-colors">Projects</a>
+                <a href="#hackathons" class="hover:text-emerald-400 transition-colors">Hackathons</a>
+                <a href="#contact" class="hover:text-emerald-400 transition-colors">Contact</a>
+            </div>
+
+            <!-- Action CTA -->
+            <div class="flex items-center gap-4">
+                <button onclick="toggleChatbot()" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
+                    <i class="fa-solid fa-sparkles text-emerald-400"></i>
+                    <span>RAG Assistant</span>
+                </button>
+                <a href="#contact" class="px-5 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-emerald-500 to-cyan-500 text-navy-900 hover:opacity-95 transition-all shadow-lg shadow-emerald-500/20">
+                    Get in Touch
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="relative z-10 pt-28 px-6 max-w-7xl mx-auto">
+        
+        <!-- HERO SECTION -->
+        <section id="about" class="py-12 md:py-20 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div class="flex-1 space-y-6 text-center md:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-card border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    Available for ML & Data Science Opportunities
+                </div>
+                
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-100 tracking-tight leading-none">
+                    Hi, I'm <span class="text-gradient">Ruslan Cabbarov</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-slate-300 font-medium">
+                    Data Scientist & Machine Learning Developer
+                </p>
+                
+                <p class="text-slate-400 leading-relaxed max-w-2xl text-base">
+                    Specializing in Time-Series Anomaly Detection, Credit Risk Analytics, and Production ML Systems. Passionate about transforming raw complex data into automated, high-impact intelligent applications.
+                </p>
+
+                <!-- Key Metrics & Highlights -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
+                    <div>
+                        <div class="text-2xl font-bold font-mono text-emerald-400">100K+</div>
+                        <div class="text-xs text-slate-400">Records Processed</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold font-mono text-cyan-400">ML & RAG</div>
+                        <div class="text-xs text-slate-400">Architecture Focus</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold font-mono text-emerald-400">SOCAR/Energy</div>
+                        <div class="text-xs text-slate-400">Hackathon Finalist</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
+                    <a href="#projects" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-navy-900 font-bold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all">
+                        View Projects <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="https://github.com/ruslancabbarov" target="_blank" class="px-6 py-3 rounded-xl glass-card text-slate-200 hover:text-emerald-400 border border-slate-700/50 hover:border-emerald-500/40 text-sm font-semibold transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-github text-lg"></i> GitHub
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" class="px-6 py-3 rounded-xl glass-card text-slate-200 hover:text-cyan-400 border border-slate-700/50 hover:border-cyan-500/40 text-sm font-semibold transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-linkedin text-lg"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile / Visual Representation -->
+            <div class="w-full md:w-5/12 flex justify-center">
+                <div class="relative w-72 h-72 md:w-96 md:h-96">
+                    <!-- Decorative Orbit Circles -->
+                    <div class="absolute inset-0 rounded-full border border-emerald-500/20 animate-spin" style="animation-duration: 25s;"></div>
+                    <div class="absolute inset-4 rounded-full border border-cyan-500/20 animate-spin" style="animation-duration: 15s; animation-direction: reverse;"></div>
+                    
+                    <!-- Center Visual Container -->
+                    <div class="absolute inset-8 rounded-3xl glass-card p-6 flex flex-col justify-between border border-emerald-500/30 overflow-hidden shadow-2xl">
+                        <div class="flex justify-between items-center text-xs font-mono text-slate-400 border-b border-slate-800 pb-3">
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> system_status</span>
+                            <span class="text-emerald-400">ONLINE</span>
+                        </div>
+                        
+                        <div class="py-4 space-y-3 font-mono text-xs">
+                            <div class="text-slate-400"><span class="text-cyan-400">const</span> developer = {</div>
+                            <div class="pl-4 text-slate-300">name: <span class="text-emerald-300">'Ruslan Cabbarov'</span>,</div>
+                            <div class="pl-4 text-slate-300">role: <span class="text-emerald-300">'Data Scientist'</span>,</div>
+                            <div class="pl-4 text-slate-300">stack: [<span class="text-cyan-300">'Python'</span>, <span class="text-cyan-300">'ML'</span>, <span class="text-cyan-300">'RAG'</span>],</div>
+                            <div class="pl-4 text-slate-300">location: <span class="text-emerald-300">'Baku, Azerbaijan'</span></div>
+                            <div class="text-slate-400">};</div>
+                        </div>
+
+                        <div class="bg-navy-900/80 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 flex items-center justify-between font-mono">
+                            <span class="text-slate-400">Loss: <span class="text-emerald-400">0.0142</span></span>
+                            <span class="text-slate-400">Acc: <span class="text-cyan-400">98.4%</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS SECTION -->
+        <section id="skills" class="py-16 border-t border-slate-800/80">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">// TECHNICAL COMPETENCIES</h2>
+                <h3 class="text-3xl font-bold text-slate-100">Skills & Tech Stack</h3>
+                <p class="text-slate-400 text-sm mt-2">End-to-end data pipeline construction, statistical model engineering, and interactive AI application deployment.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Data & Machine Learning -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4 border border-emerald-500/20">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-slate-100 mb-3">Machine Learning & Data</h4>
+                    <p class="text-slate-400 text-xs mb-4">Core analytics algorithms, predictive modeling, and feature engineering for structured & temporal datasets.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-emerald-300 text-xs font-mono border border-slate-700">Python</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-emerald-300 text-xs font-mono border border-slate-700">Scikit-Learn</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-emerald-300 text-xs font-mono border border-slate-700">XGBoost / LightGBM</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-emerald-300 text-xs font-mono border border-slate-700">Isolation Forest</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-emerald-300 text-xs font-mono border border-slate-700">Time-Series</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-emerald-300 text-xs font-mono border border-slate-700">Pandas & NumPy</span>
+                    </div>
+                </div>
+
+                <!-- Generative AI & Vector Search -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl mb-4 border border-cyan-500/20">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-slate-100 mb-3">LLMs & RAG Architectures</h4>
+                    <p class="text-slate-400 text-xs mb-4">Context-augmented AI retrieval systems, document parsing, embeddings, and intelligent assistant agents.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-cyan-300 text-xs font-mono border border-slate-700">LangChain</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-cyan-300 text-xs font-mono border border-slate-700">RAG Pipelines</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-cyan-300 text-xs font-mono border border-slate-700">Gemini API</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-cyan-300 text-xs font-mono border border-slate-700">FAISS / Vector DB</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-cyan-300 text-xs font-mono border border-slate-700">Prompt Engineering</span>
+                    </div>
+                </div>
+
+                <!-- Engineering & Web Deployment -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4 border border-emerald-500/20">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-slate-100 mb-3">Deployment & Engineering</h4>
+                    <p class="text-slate-400 text-xs mb-4">API development, database persistence, interactive UI prototyping, and cloud hosting workflows.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-slate-200 text-xs font-mono border border-slate-700">Streamlit</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-slate-200 text-xs font-mono border border-slate-700">FastAPI</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-slate-200 text-xs font-mono border border-slate-700">SQL & Supabase</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-slate-200 text-xs font-mono border border-slate-700">Git / GitHub</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-slate-200 text-xs font-mono border border-slate-700">GeoPandas / Folium</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURED PROJECTS SECTION -->
+        <section id="projects" class="py-16 border-t border-slate-800/80">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <h2 class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">// PORTFOLIO HIGHLIGHTS</h2>
+                    <h3 class="text-3xl font-bold text-slate-100">Featured Projects</h3>
+                </div>
+                <div class="mt-4 md:mt-0 flex gap-2">
+                    <button class="px-4 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">All Projects</button>
+                    <button class="px-4 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 glass-card">Machine Learning</button>
+                    <button class="px-4 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 glass-card">Analytics</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- Project 1: Energy & AI Hackathon Anomaly Detection -->
+                <div class="glass-card glass-card-hover rounded-2xl overflow-hidden border border-slate-800 flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono border border-emerald-500/20">SOCAR & Energy Hackathon</span>
+                            <span class="text-xs text-slate-500 font-mono">Time-Series ML</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-100 mb-2 hover:text-emerald-400 transition-colors cursor-pointer" onclick="openProjectModal('energy')">
+                            Energy & AI Anomaly Detection Engine
+                        </h4>
+                        <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+                            Developed for the Ministry of Energy & SOCAR hackathon. Analyzes real-time consumption data to detect off-peak energy leaks and peak spikes using Isolation Forest and Statistical Z-Score metrics.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Python</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Isolation Forest</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Streamlit Dashboard</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Plotly</span>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-navy-900/60 border-t border-slate-800/80 flex items-center justify-between">
+                        <button onclick="openProjectModal('energy')" class="text-xs font-semibold text-emerald-400 hover:underline flex items-center gap-1">
+                            Explore Technical Details <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                        <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-slate-100 text-sm">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 2: Credit Risk Intelligence -->
+                <div class="glass-card glass-card-hover rounded-2xl overflow-hidden border border-slate-800 flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono border border-cyan-500/20">FinTech Analytics</span>
+                            <span class="text-xs text-slate-500 font-mono">Classification</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-100 mb-2 hover:text-cyan-400 transition-colors cursor-pointer" onclick="openProjectModal('credit')">
+                            Credit Risk & Loan Intelligence Platform
+                        </h4>
+                        <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+                            End-to-end banking pipeline that evaluates borrower creditworthiness, calculates default probabilities, and outputs interactive decision insights with LightGBM/XGBoost algorithms.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">LightGBM</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Pandas & Parquet</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Scikit-Learn</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Optuna</span>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-navy-900/60 border-t border-slate-800/80 flex items-center justify-between">
+                        <button onclick="openProjectModal('credit')" class="text-xs font-semibold text-cyan-400 hover:underline flex items-center gap-1">
+                            Explore Technical Details <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                        <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-slate-100 text-sm">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 3: TransportTech Geospatial Mapping -->
+                <div class="glass-card glass-card-hover rounded-2xl overflow-hidden border border-slate-800 flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono border border-emerald-500/20">TransportTech Hackathon</span>
+                            <span class="text-xs text-slate-500 font-mono">Geospatial Data</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-100 mb-2 hover:text-emerald-400 transition-colors cursor-pointer" onclick="openProjectModal('geo')">
+                            Urban Bicycle Infrastructure Geospatial Mapping
+                        </h4>
+                        <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+                            Geospatial analytics application mapping bike lanes, eco-friendly transport routes, and safety coverage in Baku using GeoPandas, Folium interactive maps, and clustering algorithms.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">GeoPandas</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Folium</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Streamlit</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Shapely</span>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-navy-900/60 border-t border-slate-800/80 flex items-center justify-between">
+                        <button onclick="openProjectModal('geo')" class="text-xs font-semibold text-emerald-400 hover:underline flex items-center gap-1">
+                            Explore Technical Details <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                        <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-slate-100 text-sm">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 4: Credit Card Fraud Detection API -->
+                <div class="glass-card glass-card-hover rounded-2xl overflow-hidden border border-slate-800 flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono border border-cyan-500/20">API & Microservice</span>
+                            <span class="text-xs text-slate-500 font-mono">Production ML</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-100 mb-2 hover:text-cyan-400 transition-colors cursor-pointer" onclick="openProjectModal('fraud')">
+                            Credit Card Fraud Detection FastAPI Microservice
+                        </h4>
+                        <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+                            Low-latency REST API serving real-time fraud predictions. Leverages Haversine distance spatial calculations and XGBoost to identify compromised card transactions.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">FastAPI</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">XGBoost</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Haversine</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">Docker</span>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-navy-900/60 border-t border-slate-800/80 flex items-center justify-between">
+                        <button onclick="openProjectModal('fraud')" class="text-xs font-semibold text-cyan-400 hover:underline flex items-center gap-1">
+                            Explore Technical Details <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                        <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-slate-100 text-sm">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- HACKATHON & EXPERIENCE SECTION -->
+        <section id="hackathons" class="py-16 border-t border-slate-800/80">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">// COMPETITIVE INNOVATION</h2>
+                <h3 class="text-3xl font-bold text-slate-100">Hackathon Experience</h3>
+                <p class="text-slate-400 text-sm mt-2">Demonstrated capability in fast-paced collaborative development and real-world problem solving under tight timelines.</p>
+            </div>
+
+            <div class="relative border-l-2 border-slate-800 ml-4 md:ml-32 space-y-12">
+                <!-- Event 1 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-navy-900 border-2 border-emerald-400 group-hover:bg-emerald-400 transition-colors"></div>
+                    <div class="glass-card p-6 rounded-2xl border border-slate-800">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h4 class="text-lg font-bold text-slate-100">Energy & AI Hackathon</h4>
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono w-fit">Ministry of Energy & SOCAR</span>
+                        </div>
+                        <p class="text-xs font-mono text-slate-400 mb-3">Location: Baku Higher Oil School (BANM)</p>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Formed a multi-disciplinary team to analyze industrial energy datasets. Built an end-to-end anomaly detection pipeline using Isolation Forest and a custom Streamlit dashboard to identify energy waste patterns and provide financial savings metrics.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-navy-900 border-2 border-cyan-400 group-hover:bg-cyan-400 transition-colors"></div>
+                    <div class="glass-card p-6 rounded-2xl border border-slate-800">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h4 class="text-lg font-bold text-slate-100">TransportTech & Eco Mobility Hackathon</h4>
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono w-fit">Urban Mobility Challenge</span>
+                        </div>
+                        <p class="text-xs font-mono text-slate-400 mb-3">Focus: Geospatial Analytics & Smart Cities</p>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Constructed an interactive GIS dashboard evaluating cycling route safety and density in metropolitan Baku. Utilized GeoPandas and Folium to calculate optimal green corridor locations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="py-16 border-t border-slate-800/80 mb-20">
+            <div class="glass-card p-8 md:p-12 rounded-3xl border border-slate-800 text-center max-w-3xl mx-auto relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                <h3 class="text-3xl font-bold text-slate-100 mb-4">Let's Build Something Intelligent Together</h3>
+                <p class="text-slate-400 text-sm mb-8 max-w-xl mx-auto">
+                    Interested in discussing Data Science roles, Machine Learning engineering projects, or hackathon collaboration? Feel free to reach out directly.
+                </p>
+
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <a href="mailto:ruslan@example.com" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-navy-900 font-bold text-sm hover:opacity-95 transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+                        <i class="fa-solid fa-envelope"></i> Send Email
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" class="px-6 py-3 rounded-xl glass-card text-slate-200 hover:text-cyan-400 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-linkedin text-base"></i> LinkedIn Profile
+                    </a>
+                    <a href="https://github.com" target="_blank" class="px-6 py-3 rounded-xl glass-card text-slate-200 hover:text-emerald-400 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-github text-base"></i> GitHub Portfolio
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800/80 py-8 px-6 text-center text-slate-500 text-xs font-mono relative z-10">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>© 2026 Ruslan Cabbarov. All rights reserved.</div>
+            <div class="flex items-center gap-4 text-slate-400">
+                <span>Built with HTML, Tailwind CSS & RAG Demo Engine</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE PROJECT DETAIL MODAL -->
+    <div id="projectModal" class="fixed inset-0 z-50 bg-navy-900/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-2xl w-full rounded-2xl border border-slate-700 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                <div>
+                    <span id="modalCategory" class="text-xs font-mono text-emerald-400">Category</span>
+                    <h3 id="modalTitle" class="text-xl font-bold text-slate-100">Project Title</h3>
+                </div>
+                <button onclick="closeProjectModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-slate-100 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-sm text-slate-300">
+                <div>
+                    <h5 class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Architecture & Problem Statement</h5>
+                    <p id="modalDesc" class="leading-relaxed text-slate-300"></p>
+                </div>
+                <div>
+                    <h5 class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Key Machine Learning Techniques</h5>
+                    <ul id="modalTechniques" class="list-disc list-inside space-y-1 text-slate-300 text-xs"></ul>
+                </div>
+                <div>
+                    <h5 class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Tech Stack & Tools</h5>
+                    <div id="modalStack" class="flex flex-wrap gap-2 pt-1"></div>
+                </div>
+            </div>
+            <div class="p-4 bg-navy-900 border-t border-slate-800 flex justify-end gap-3">
+                <button onclick="closeProjectModal()" class="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700">Close</button>
+                <a id="modalGithubLink" href="#" target="_blank" class="px-4 py-2 rounded-lg bg-emerald-500 text-navy-900 text-xs font-bold hover:bg-emerald-400 flex items-center gap-1.5">
+                    <i class="fa-brands fa-github"></i> View Repository
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING RAG AI CHATBOT WIDGET -->
+    <div class="fixed bottom-6 right-6 z-50">
+        
+        <!-- Toggle Button -->
+        <button id="chatbotToggle" onclick="toggleChatbot()" class="pulse-btn w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-500 text-navy-900 shadow-xl flex items-center justify-center text-xl font-bold hover:scale-105 transition-all">
+            <i class="fa-solid fa-sparkles text-navy-900"></i>
+        </button>
+
+        <!-- Chat Window Modal Popup -->
+        <div id="chatModal" class="hidden absolute bottom-20 right-0 w-[90vw] sm:w-[420px] h-[540px] glass-card rounded-3xl border border-slate-700/80 shadow-2xl flex flex-col overflow-hidden">
+            
+            <!-- Chat Header -->
+            <div class="p-4 bg-navy-900/90 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 p-[1px]">
+                        <div class="w-full h-full bg-navy-900 rounded-[11px] flex items-center justify-center text-emerald-400 font-bold text-xs">
+                            AI
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+                            Ruslan's RAG Assistant
+                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        </div>
+                        <div class="text-[10px] font-mono text-slate-400">Context: Portfolio Document Store</div>
+                    </div>
+                </div>
+                <button onclick="toggleChatbot()" class="text-slate-400 hover:text-slate-100 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Chat Content Box -->
+            <div id="chatContainer" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
+                <!-- Welcome System Message -->
+                <div class="flex gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 text-xs">
+                        <i class="fa-solid fa-bot"></i>
+                    </div>
+                    <div class="bg-slate-800/90 border border-slate-700/60 p-3 rounded-2xl rounded-tl-none text-slate-200 leading-relaxed space-y-2">
+                        <p>Hello! I am Ruslan's Portfolio AI Assistant powered by a specialized RAG context pipeline.</p>
+                        <p class="text-slate-400 text-[11px]">Ask me anything about Ruslan's Machine Learning experience, hackathons, skills, or projects!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggested Quick Chips -->
+            <div class="px-4 py-2 border-t border-slate-800/60 bg-navy-900/40 flex items-center gap-2 overflow-x-auto no-scrollbar">
+                <button onclick="sendQuickPrompt('What are Ruslan\'s key ML skills?')" class="shrink-0 px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-[11px] border border-slate-700 transition-colors">
+                    ⚡ ML Skills
+                </button>
+                <button onclick="sendQuickPrompt('Tell me about his Energy & AI hackathon experience')" class="shrink-0 px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-[11px] border border-slate-700 transition-colors">
+                    🏆 Energy Hackathon
+                </button>
+                <button onclick="sendQuickPrompt('What projects has Ruslan built?')" class="shrink-0 px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-[11px] border border-slate-700 transition-colors">
+                    📁 Projects Overview
+                </button>
+            </div>
+
+            <!-- Chat Input Bar -->
+            <form id="chatForm" onsubmit="handleUserSubmit(event)" class="p-3 bg-navy-900 border-t border-slate-800 flex items-center gap-2">
+                <input id="chatInput" type="text" placeholder="Ask about Ruslan's background..." autocomplete="off" class="flex-1 bg-slate-800/90 border border-slate-700 text-slate-100 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500/60">
+                <button type="submit" class="w-9 h-9 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-navy-900 flex items-center justify-center font-bold hover:opacity-90 transition-opacity">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Project Modals Data Definition
+        const projectData = {
+            energy: {
+                category: "Energy & AI Hackathon Project",
+                title: "Energy & AI Anomaly Detection Engine",
+                desc: "Designed and implemented an automated Time-Series Anomaly Detection model for the joint Ministry of Energy & SOCAR Hackathon. The platform identifies unexpected electricity spikes, base-load leaks during off-peak hours (nights/weekends), and computes potential cost savings.",
+                techniques: [
+                    "Statistical Z-score & Moving Average volatility detection",
+                    "Isolation Forest unsupervised anomaly identification",
+                    "Time-series feature extraction (hour, day of week, seasonal metrics)",
+                    "Interactive Streamlit monitoring dashboard with Plotly charts"
+                ],
+                stack: ["Python", "Pandas", "Scikit-Learn", "Isolation Forest", "Streamlit", "Plotly"],
+                github: "https://github.com"
+            },
+            credit: {
+                category: "FinTech & Banking Analytics",
+                title: "Credit Risk & Loan Intelligence Platform",
+                desc: "End-to-end Machine Learning pipeline that scores borrower loan applications. Computes default risk probabilities using LightGBM and XGBoost, providing clear decision thresholds for financial approval workflows.",
+                techniques: [
+                    "High-throughput Parquet dataset ingestion and feature aggregation",
+                    "Outlier remediation and Target Encoding for categorical metrics",
+                    "Hyperparameter optimization via Optuna",
+                    "Model interpretability metrics (SHAP value feature impact analysis)"
+                ],
+                stack: ["LightGBM", "XGBoost", "Pandas", "Optuna", "Scikit-Learn"],
+                github: "https://github.com"
+            },
+            geo: {
+                category: "TransportTech Hackathon",
+                title: "Urban Bicycle Infrastructure Geospatial Mapping",
+                desc: "Spatial analysis platform built for urban mobility optimization. Maps bike lanes, safety zones, and eco-friendly transport corridors across Baku using spatial clustering algorithms.",
+                techniques: [
+                    "Geospatial vector processing with GeoPandas & Shapely",
+                    "Interactive map layers using Folium & Leaflet engine",
+                    "DBSCAN spatial clustering to find high-density cycling demand spots"
+                ],
+                stack: ["GeoPandas", "Folium", "Shapely", "Streamlit", "Python"],
+                github: "https://github.com"
+            },
+            fraud: {
+                category: "Production API",
+                title: "Credit Card Fraud Detection FastAPI Microservice",
+                desc: "Low-latency REST microservice designed for real-time transaction monitoring. Detects fraudulent credit card usage by computing geographical Haversine distance anomalies between consecutive user card transactions.",
+                techniques: [
+                    "Haversine spatial distance transformation features",
+                    "Imbalanced class handling with Synthetic Minority Oversampling (SMOTE)",
+                    "FastAPI asynchronous REST routing with Pydantic schema validation"
+                ],
+                stack: ["FastAPI", "XGBoost", "Docker", "Pydantic", "Python"],
+                github: "https://github.com"
+            }
+        };
+
+        // Open Project Modal
+        function openProjectModal(key) {
+            const data = projectData[key];
+            if (!data) return;
+
+            document.getElementById('modalCategory').innerText = data.category;
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalDesc').innerText = data.desc;
+
+            // Populate Techniques
+            const techList = document.getElementById('modalTechniques');
+            techList.innerHTML = '';
+            data.techniques.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = item;
+                techList.appendChild(li);
+            });
+
+            // Populate Tech Stack Badges
+            const stackContainer = document.getElementById('modalStack');
+            stackContainer.innerHTML = '';
+            data.stack.forEach(tech => {
+                const span = document.createElement('span');
+                span.className = 'px-2.5 py-1 rounded bg-slate-800 text-slate-200 text-xs font-mono border border-slate-700';
+                span.innerText = tech;
+                stackContainer.appendChild(span);
+            });
+
+            document.getElementById('modalGithubLink').href = data.github;
+            document.getElementById('projectModal').classList.remove('hidden');
+        }
+
+        // Close Project Modal
+        function closeProjectModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+
+        // CHATBOT WIDGET LOGIC & SIMULATED RAG RESPONSE ENGINE
+        function toggleChatbot() {
+            const chatModal = document.getElementById('chatModal');
+            chatModal.classList.toggle('hidden');
+            if (!chatModal.classList.contains('hidden')) {
+                document.getElementById('chatInput').focus();
+            }
+        }
+
+        function sendQuickPrompt(text) {
+            document.getElementById('chatInput').value = text;
+            handleUserSubmit(new Event('submit'));
+        }
+
+        // Knowledge Base for Simulated Portfolio RAG Engine
+        const portfolioKnowledgeBase = [
+            {
+                keywords: ['skill', 'stack', 'technology', 'python', 'tools', 'know'],
+                response: "Ruslan specializes in Data Science and Machine Learning. His core tech stack includes **Python**, **Pandas**, **Scikit-Learn**, **XGBoost**, **LightGBM**, **Time-Series Analysis**, **Isolation Forest**, **Streamlit**, **FastAPI**, **SQL/Supabase**, and **RAG Architectures** using LangChain and vector databases."
+            },
+            {
+                keywords: ['energy', 'socar', 'hackathon', 'banm', 'waste', 'anomaly'],
+                response: "Ruslan is preparing for and participating in the **Energy & AI Hackathon** organized by the Ministry of Energy of Azerbaijan and SOCAR at Baku Higher Oil School (BANM). He engineered an **Anomaly Detection System** using Isolation Forest and Z-Score algorithms to identify energy consumption spikes and off-peak waste."
+            },
+            {
+                keywords: ['project', 'portfolio', 'built', 'work', 'experience'],
+                response: "Ruslan's featured projects include:\n1. **Energy & AI Anomaly Detection Engine** (Time-series ML & Streamlit dashboard)\n2. **Credit Risk & Loan Intelligence Platform** (LightGBM & Optuna)\n3. **Urban Mobility Geospatial Mapping** (GeoPandas & Folium)\n4. **Credit Card Fraud Detection API** (FastAPI & XGBoost)."
+            },
+            {
+                keywords: ['rag', 'llm', 'chat', 'ai', 'langchain', 'vector'],
+                response: "Ruslan builds Retrieval-Augmented Generation (RAG) applications! He integrates vector stores (FAISS/ChromaDB), document embeddings, and LLM APIs (Gemini/OpenAI) into web apps (FastAPI / Streamlit) to enable intelligent doc querying and AI support assistants."
+            },
+            {
+                keywords: ['contact', 'hire', 'email', 'linkedin', 'reach', 'baku'],
+                response: "You can reach out to Ruslan directly via email at **ruslan@example.com**, or connect with him on LinkedIn and GitHub through the links in the hero section!"
+            }
+        ];
+
+        function handleUserSubmit(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('chatInput');
+            const userText = inputEl.value.trim();
+            if (!userText) return;
+
+            // Render User Message
+            renderChatMessage(userText, 'user');
+            inputEl.value = '';
+
+            // Render Typing Indicator
+            const typingId = renderTypingIndicator();
+
+            // Simulate RAG Retrieval & Generation Delay
+            setTimeout(() => {
+                removeTypingIndicator(typingId);
+                const botResponse = generateRAGResponse(userText);
+                renderChatMessage(botResponse, 'assistant');
+            }, 1000);
+        }
+
+        function renderChatMessage(text, role) {
+            const container = document.getElementById('chatContainer');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex gap-2 ' + (role === 'user' ? 'justify-end' : '');
+
+            if (role === 'user') {
+                msgDiv.innerHTML = `
+                    <div class="bg-gradient-to-r from-emerald-500 to-cyan-500 text-navy-900 font-medium p-3 rounded-2xl rounded-tr-none leading-relaxed max-w-[85%]">
+                        ${escapeHtml(text)}
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 text-xs">
+                        <i class="fa-solid fa-bot"></i>
+                    </div>
+                    <div class="bg-slate-800/90 border border-slate-700/60 p-3 rounded-2xl rounded-tl-none text-slate-200 leading-relaxed space-y-1.5 max-w-[85%]">
+                        ${formatMarkdown(text)}
+                        <div class="text-[9px] font-mono text-emerald-400/80 pt-1 border-t border-slate-700/50">
+                            Source: Ruslan_Portfolio_Context.vector
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function renderTypingIndicator() {
+            const container = document.getElementById('chatContainer');
+            const id = 'typing_' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'flex gap-2';
+            div.innerHTML = `
+                <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 text-xs">
+                    <i class="fa-solid fa-bot"></i>
+                </div>
+                <div class="bg-slate-800/90 border border-slate-700/60 px-4 py-3 rounded-2xl rounded-tl-none text-slate-400 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 typing-dot"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 typing-dot"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 typing-dot"></span>
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function removeTypingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function generateRAGResponse(query) {
+            const lower = query.toLowerCase();
+            
+            for (let item of portfolioKnowledgeBase) {
+                if (item.keywords.some(kw => lower.includes(kw))) {
+                    return item.response;
+                }
+            }
+
+            return "Ruslan Cabbarov is a Data Scientist & ML Developer based in Baku. He builds Time-Series Anomaly Detection systems, Credit Risk models, and RAG-powered LLM applications. Try asking about his **skills**, **projects**, or **hackathon background**!";
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function formatMarkdown(str) {
+            let formatted = escapeHtml(str);
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong class="text-emerald-400 font-semibold">$1</strong>');
+            formatted = formatted.replace(/\n/g, '<br/>');
+            return formatted;
+        }
+    </script>
+</body>
+</html>
