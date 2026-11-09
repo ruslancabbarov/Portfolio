@@ -1,111 +1,18 @@
 {
-  "name": "Ruslan Cabbarov",
-  "title": "Model Validation & Credit Risk Analyst (Intern) | Data Scientist",
-  "location": "Baku, Azerbaijan",
-  "contact": {
-    "phone": "+994 51 476 70 25",
-    "email": "ruslaanc0000@gmail.com",
-    "github": "https://github.com/ruslancabbarov",
-    "linkedin": "https://linkedin.com/in/ruslan-cabbarov"
-  },
-  "summary": "UNEC-də Biznesin İdarə Edilməsi üzrə təhsil alan, Data Science və Kredit Risklərinin Modelləşdirilməsi üzrə ixtisaslaşmış mütəxəssis. Basel III və IFRS 9 çərçivələrinə uyğun olaraq Python və SQL ilə Kredit Risk Qiymətləndirmə (Credit Risk Scoring) sistemləri işləyib hazırlayır, NLP (Transformers) və Generative AI / RAG texnologiyalarından istifadə edir.",
-  "education": [
-    {
-      "institution": "Azerbaijan State University of Economics (UNEC)",
-      "degree": "Bachelor of Business Administration",
-      "gpa": "85/100",
-      "period": "Sep 2023 - Present",
-      "location": "Baku, Azerbaijan"
-    },
-    {
-      "institution": "Div Academy",
-      "program": "Data Science Program",
-      "period": "Oct 2025 - May 2026",
-      "location": "Baku, Azerbaijan"
-    }
-  ],
-  "certifications_and_programs": [
-    "IBM Data Science Professional Certificate (Credly Verified Digital Badge)",
-    "McKinsey Forward Program Participant",
-    "Coursera via Milli Proqram Initiative"
-  ],
-  "languages": [
-    "Azerbaijani (Native)",
-    "English (B2 - Academic / Technical Reading & Writing)",
-    "Turkish (B2)"
-  ],
-  "skills": {
-    "model_risk_and_validation": [
-      "Credit Risk (PD / LGD / EAD)",
-      "IFRS 9",
-      "Basel III",
-      "Validation Tests (Discrimination, Calibration, Stability, Backtesting)",
-      "SHAP Explainability",
-      "Data Quality Checks & Validation Reports"
-    ],
-    "programming_and_statistics": [
-      "Python (Pandas, NumPy, Scikit-learn, LightGBM, XGBoost)",
-      "SQL (PostgreSQL, Supabase)",
-      "Statistics",
-      "Excel",
-      "Git & GitHub"
-    ],
-    "machine_learning_and_nlp": [
-      "Regression & Classification",
-      "Clustering",
-      "Feature Engineering",
-      "Model Evaluation (AUC-ROC, Gini, Accuracy, Recall)",
-      "Transformer NLP (XLM-RoBERTa, TF-IDF)"
-    ],
-    "gen_ai_and_llms": [
-      "Prompt Writing",
-      "RAG (Retrieval-Augmented Generation)",
-      "AI Agents",
-      "FastAPI",
-      "Docker",
-      "Streamlit",
-      "Google Gemini API"
-    ]
-  },
-  "projects": [
-    {
-      "title": "Credit Risk Assessment System",
-      "tech_stack": ["Python", "LightGBM", "SHAP", "SQL", "FastAPI", "Docker", "Streamlit", "Supabase PostgreSQL", "Render"],
-      "description": "307,511 kredit müraciəti üzərində işlənilmiş kredit skoring modeli (AUC-ROC: 0.78, Gini: 0.56). 406 xam göstəricidən 72 xüsusiyyət yaradılıb, Basel III standartlarına uyğun 3 pilləli qərar qaydası və SHAP izahları əlavə edilib."
-    },
-    {
-      "title": "Multilingual Text Classification (DataRace / MSİM Competition)",
-      "tech_stack": ["Python", "TF-IDF", "XLM-RoBERTa"],
-      "description": "Azərbaycan, rus və ingilis dillərində mətnlər üçün TF-IDF və XLM-RoBERTa əsaslı ansambl modeli (Public Leaderboard score: ~0.9166)."
-    },
-    {
-      "title": "Fraud Detection API",
-      "tech_stack": ["Python", "XGBoost", "FastAPI"],
-      "description": "AUC 0.998 olan XGBoost modeli. Feature engineering vasitəsilə dələduzluq hallarının tapılması göstəricisi (recall) 96%-ə qaldırılıb və FastAPI vasitəsilə REST API kimi canlıya verilib."
-    },
-    {
-      "title": "Employee Churn Prediction & California House Prices",
-      "tech_stack": ["Python", "Scikit-learn", "Random Forest", "Lasso Regression"],
-      "description": "İşçilərin işdən ayrılmasını 98% dəqiqliklə proqnozlaşdıran Random Forest modeli və Lasso regresiyası ilə ev qiymətlərinin təhlili."
-    },
-    {
-      "title": "Gmail AI Summarizer & Telegram Bot",
-      "tech_stack": ["Python", "Google Gemini API", "Telegram Bot API", "Windows Task Scheduler"],
-      "description": "Oxunmamış e-poçtları avtomatik ümumiləşdirib hər 3 saatdan bir Telegram botuna göndərən avtomatlaşdırma sistemi."
-    }
-  ],
-  "experience": [
-    {
-      "role": "Local Head of Global Internships",
-      "organization": "AIESEC in Azerbaijan",
-      "period": "Feb 2026 - May 2026",
-      "details": "5 nəfərlik komandaya rəhbərlik, KPI təhlili, müraciətdən reallaşmaya qədər olan dar boğazların verilənlərlə həlli."
-    },
-    {
-      "role": "Finance Operations Analyst (Remote)",
-      "organization": "AIESEC in Poland",
-      "period": "Sep 2025 - Feb 2026",
-      "details": "Məhəlli komitələrin xərclərinin təhlili, SQL və Python ilə hesabatlıq iş axınlarının avtomatlaşdırılması, aylıq maliyyə hesabatlarının auditi."
-    }
+  "chunks": [
+    "Name: Ruslan Cabbarov. Title: Model Validation & Credit Risk Analyst (Intern) | Data Scientist. Location: Baku, Azerbaijan. Contact: +994 51 476 70 25, ruslaanc0000@gmail.com, GitHub: github.com/ruslancabbarov, LinkedIn: linkedin.com/in/ruslan-cabbarov.",
+    "Education: Bachelor of Business Administration at Azerbaijan State University of Economics (UNEC), Sep 2023 - Present, GPA 85/100. Data Science Program at Div Academy, Oct 2025 - May 2026.",
+    "Certifications and Programs: IBM Data Science Professional Certificate (Credly Verified Digital Badge), McKinsey Forward Program Participant, Coursera via Milli Proqram Initiative.",
+    "Languages: Azerbaijani (Native), English (B2 - Academic / Technical Reading & Writing), Turkish (B2).",
+    "Model Risk & Validation Skills: Credit risk scoring (PD, LGD, EAD), IFRS 9, Basel III, validation tests (discrimination, calibration, stability, backtesting), SHAP explainability, data quality checks, validation reports and working papers.",
+    "Technical Skills: Python (Pandas, NumPy, Scikit-learn, LightGBM, XGBoost), SQL (PostgreSQL, Supabase), Statistics, Excel, Git, GitHub, FastAPI, Docker, Streamlit, Jupyter, Matplotlib, Seaborn, Plotly, Windows Task Scheduler.",
+    "Generative AI & LLM Skills: Prompt writing, RAG (Retrieval-Augmented Generation), AI agents, Gemini API, Telegram Bot API, Transformer NLP (XLM-RoBERTa, TF-IDF).",
+    "Projects - Credit Risk Assessment System: Built a credit scoring model on 307,511 loan applications with LightGBM (AUC-ROC: 0.78, Gini: 0.56). Engineered 72 features from 406 raw inputs, implemented a 3-tier decision rule and SHAP explanations in line with Basel III. Deployed with FastAPI, Streamlit, Supabase PostgreSQL, Docker, and Render.",
+    "Projects - Multilingual Text Classification (DataRace / MSİM competition): Built an ensemble of TF-IDF and XLM-RoBERTa for Azerbaijani, Russian, and English texts. Public leaderboard score ~0.9166.",
+    "Projects - Fraud Detection API: XGBoost model with AUC 0.998 and 96% recall. Served as a real-time REST API via FastAPI.",
+    "Projects - Employee Churn & California House Prices: Random Forest with 98% accuracy for churn prediction; Lasso regression for house price analysis.",
+    "Projects - Gmail AI Summarizer & Telegram Bot: Automated Python system summarizing unread emails using Gemini API and sending to Telegram every 3 hours.",
+    "Experience - Local Head of Global Internships at AIESEC in Azerbaijan (Feb 2026 - May 2026): Led team of 5, tracked KPIs, solved application-to-realization bottlenecks with data.",
+    "Experience - Finance Operations Analyst (Remote) at AIESEC in Poland (Sep 2025 - Feb 2026): Analyzed spending across Local Committees, built SQL and Python reporting workflows, audited monthly financial reports."
   ]
 }
