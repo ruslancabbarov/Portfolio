@@ -1,8 +1,9 @@
 // Lokalda localhost-a, canlıda Render linkinə qoşulur
-const API_URL =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://127.0.0.1:8000/api/chat"
-    : "https://SENIN-BACKEND-ADIN.onrender.com/api/chat";
+const IS_LOCAL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
+const API_URL = IS_LOCAL
+  ? "http://127.0.0.1:8000/api/chat"
+  : "https://portfolio-1uj6.onrender.com/api/chat";
 
 function toggleChatbot() {
   const modal = document.getElementById("chatModal");
