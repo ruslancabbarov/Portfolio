@@ -1,4 +1,4 @@
-json import edin
+import json
 import os
 import urllib.request
 from pathlib import Path
@@ -119,7 +119,6 @@ KONTEKST:
 """
 
         try:
-            # Model adı dürüstləşdirildi: gemini-1.5-flash
             response = self.ai_client.models.generate_content(
                 model="gemini-1.5-flash",
                 contents=f"{system_prompt}\n\nİstifadəçinin Sualı: {question}",
