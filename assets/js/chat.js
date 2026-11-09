@@ -1,5 +1,5 @@
 // Render backend canlı URL ünvanı
-const BACKEND_URL = "https://portfolio-1uj6.onrender.com";
+const BACKEND_URL = "https://portfolio-82lh.onrender.com"; // Render-dəki backend canlı domenin
 
 function toggleChatbot() {
     const modal = document.getElementById("chatbotModal");
@@ -26,11 +26,11 @@ async function sendMessage() {
     inputField.value = "";
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-    // Yüklənir mesajı
+    // Yüklənir indikatoru
     const loadingBubble = document.createElement("div");
     loadingBubble.id = "botLoading";
     loadingBubble.className = "bg-slate-800/60 text-slate-400 p-3 rounded-xl max-w-[85%] border border-slate-700/50 italic";
-    loadingBubble.innerText = "RuslanAI cavab yazır...";
+    loadingBubble.innerText = "RuslanAI düşünür...";
     messagesContainer.appendChild(loadingBubble);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -40,19 +40,30 @@ async function sendMessage() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ message: messageText })
+            body: JSON.stringify({
+                message: messageText,
+                query: messageText
+            })
         });
 
         const data = await response.json();
         
-        // Yüklənir mesajını sil
+        // Loading mesajını sil
         const loadingNode = document.getElementById("botLoading");
         if (loadingNode) loadingNode.remove();
 
-        // Botun cavabını ekrana əlavə et
+        // Bot cavabı
         const botBubble = document.createElement("div");
         botBubble.className = "bg-slate-800/60 text-slate-200 p-3 rounded-xl max-w-[85%] border border-slate-700/50";
-        botBubble.innerText = data.response || data.message || "Cavab alına bilmədi.";
+        
+        const answerText = data.response || data.answer || data.reply || data.message;
+        
+        if (answerText) {
+            botBubble.innerText = answerText;
+        } else {
+            botBubble.innerText = "Bu haqda mənə məlumat verilməyib, Ruslan ilə birbaşa əlaqə saxlaya bilərsiniz.";
+        }
+        
         messagesContainer.appendChild(botBubble);
 
     } catch (error) {
@@ -61,7 +72,7 @@ async function sendMessage() {
 
         const errorBubble = document.createElement("div");
         errorBubble.className = "bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[85%] border border-red-500/30";
-        errorBubble.innerText = "Xəta baş verdi. Xahiş edirik backend bağlantısını yoxlayın.";
+        errorBubble.innerText = "Bağlantı xətası baş verdi. Lütfən bir qədər sonra yenidən cəhd edin.";
         messagesContainer.appendChild(errorBubble);
     }
     
