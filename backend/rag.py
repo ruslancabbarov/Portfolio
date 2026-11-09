@@ -4,8 +4,7 @@ import urllib.request
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Rəsmi yeni Google GenAI SDK
-from google import genai
+from openai import OpenAI
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -109,38 +108,30 @@ QAYDALAR:
 
 KONTEKST:
 {context}
-
-İstifadəçinin Sualı: {question}
 """
 
-        api_key = os.getenv("GEMINI_API_KEY", "")
+        api_key = os.getenv("OPENAI_API_KEY", "")
         if not api_key:
             return {
-                "answer": "GEMINI_API_KEY mühitdə tapılmadı. Lütfən Render-də Environment Variables bölməsini yoxlayın.",
+                "answer": "OPENAI_API_KEY Render mühitində tapılmadı. Lütfən Environment Variables bölməsini yoxlayın.",
                 "sources": sources,
                 "score": round(best_score, 3)
             }
 
         try:
-            # Yeni SDK Klienti (AQ.Ab8... açarları ilə 100% tam uyğundur)
-            client = genai.Client(api_key=api_key)
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=system_prompt,
+            client = OpenAI(api_key=api_key)
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": question}
+                ],
+                temperature=0.3
             )
-            ai_answer = response.text
+            ai_answer = response.choices[0].message.content
         except Exception as e:
-            # Model adı gemini-2.5-flash tapılmazsa gemini-1.5-flash ilə fallback edirik
-            try:
-                client = genai.Client(api_key=api_key)
-                response = client.models.generate_content(
-                    model="gemini-1.5-flash",
-                    contents=system_prompt,
-                )
-                ai_answer = response.text
-            except Exception as err:
-                print(f"Gemini New SDK Error: {err}")
-                ai_answer = f"Gemini API xətası baş verdi: {str(err)}"
+            print(f"OpenAI Error: {e}")
+            ai_answer = f"OpenAI xətası: {str(e)}"
 
         return {
             "answer": ai_answer,
