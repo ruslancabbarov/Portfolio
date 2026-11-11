@@ -1,140 +1,59 @@
 import json
 import os
-import urllib.request
-from pathlib import Path
-from dotenv import load_dotenv
-
-from openai import OpenAI
+import google.generativeai as genai
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-load_dotenv()
+# Gemini API konfiqurasiyası (Render-də GEMINI_API_KEY dəyişəni yoxdursa OPENAI_API_KEY və ya sistem key-dən oxuyur)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
 
-DATA_PATH = Path(__file__).parent / "data" / "profile.json"
+# profile.json faylını yükləyirik
+PROFILE_PATH = os.path.join(os.path.dirname(__file__), "profile.json")
 
-MIN_SCORE = 0.12
-TOP_K = 2
+def load_profile():
+    if os.path.exists(PROFILE_PATH):
+        with open(PROFILE_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
 
-GITHUB_USER = os.getenv("GITHUB_USER", "ruslancabbarov")
-GITHUB_TOPIC = "portfolio"
-
-def load_github_chunks():
-    """GitHub-da 'portfolio' topic-i olan public repoları chunk-a çevirir."""
-    url = f"https://api.github.com/users/{GITHUB_USER}/repos?per_page=100&sort=updated"
-    headers = {"User-Agent": "portfolio-rag"}
-    token = os.getenv("GITHUB_TOKEN")
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-    try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=8) as r:
-            repos = json.load(r)
-    except Exception:
-        return []
-
-    chunks = []
-    for r in repos:
-        if r.get("fork") or r.get("archived"):
-            continue
-        if GITHUB_TOPIC not in r.get("topics", []):
-            continue
-        lang = r.get("language") or "n/a"
-        topics = " ".join(r.get("topics", []))
-        chunks.append(
-            {
-                "id": f"gh_{r['name']}",
-                "title": f"GitHub project: {r['name']}",
-                "keywords": f"project layihə github {r['name']} {topics} {lang}",
-                "text": (
-                    f"{r['name']}: {r.get('description') or 'No description provided.'} "
-                    f"Main language: {lang}. Repository: {r['html_url']}"
-                ),
-            }
-        )
-    return chunks
-
-
-class PortfolioRAG:
-    def __init__(self, path: Path = DATA_PATH):
+def get_rag_response(user_query: str) -> str:
+    profile_data = load_profile()
+    context_str = json.dumps(profile_data, ensure_ascii=False, indent=2)
+    
+    # Əgər Gemini API Key mövcuddursa, Gemini modeli ilə cavab generasiya edirik
+    if GEMINI_API_KEY:
         try:
-            with open(path, encoding="utf-8") as f:
-                json_chunks = json.load(f).get("chunks", [])
-        except Exception:
-            json_chunks = []
+            model = genai.GenerativeModel("gemini-1.5-flash")
+            prompt = f"""
+Sən Ruslan Cabbarovun portfolioları üçün cavab verən AI assistentsən.
+İstifadəçinin sualına YALNIZ aşağıda təqdim olunan şəxsi MƏLUMAT KONTEKSTİ əsasında dəqiq və peşəkar cavab ver.
+Kontekstdə olmayan məlumatlar haqqında soruşularsa, nəzakətlə yalnız Ruslanın portfolio məlumatları üzrə cavab verə bildiyini qeyd et.
 
-        self.chunks = json_chunks + load_github_chunks()
+MƏLUMAT KONTEKSTİ:
+{context_str}
 
-        if not self.chunks:
-            self.chunks = [{
-                "id": "fallback",
-                "title": "Ruslan Cabbarov",
-                "keywords": "ruslan data science credit risk",
-                "text": "Ruslan Cabbarov UNEC tələbəsidir, Data Science və Credit Risk üzrə mütəxəssisdir."
-            }]
-
-        self.corpus = [
-            f"{c.get('title', '')} {c.get('keywords', '')} {c.get('text', '')}" for c in self.chunks
-        ]
-        self.vectorizer = TfidfVectorizer(
-            analyzer="char_wb", ngram_range=(3, 5), lowercase=True
-        )
-        self.matrix = self.vectorizer.fit_transform(self.corpus)
-
-    def answer(self, question: str) -> dict:
-        q_vec = self.vectorizer.transform([question])
-        scores = cosine_similarity(q_vec, self.matrix).ravel()
-        ranked = scores.argsort()[::-1][:TOP_K]
-
-        best_score = float(scores[ranked[0]])
-
-        if best_score < MIN_SCORE:
-            context = "Bu mövzuda verilən rəsmi baza daxilində məlumat yoxdur."
-            sources = []
-        else:
-            picked = [
-                i for i in ranked if scores[i] >= max(MIN_SCORE, best_score * 0.6)
-            ]
-            context = "\n\n".join(self.chunks[i]["text"] for i in picked)
-            sources = [self.chunks[i]["title"] for i in picked]
-
-        system_prompt = f"""
-Sənin adın RuslanAI-dır. Sən Data Scientist və Model Validation mütəxəssisi Ruslan Cabbarovun şəxsi AI assistentisən.
-Sənin vəzifən istifadəçilərin suallarına Ruslanın adından səmimi, peşəkar və dəqiq cavab verməkdir.
-
-QAYDALAR:
-1. YALNIZ verilən Kontekst daxilindəki faktlara əsaslan. Kontekstdə olmayan məlumatı uydurma.
-2. Əgər kontekstdə sualın cavabı yoxdursa, nəzakətlə bildir ki: "Mən Ruslanın assistentiyəm, lakin bu haqda məndə dəqiq məlumat yoxdur. Ruslanla birbaşa LinkedIn və ya Email vasitəsilə əlaqə saxlaya bilərsiniz."
-3. İstifadəçi hansı dildə sual verərsə, həmin dildə cavab ver.
-
-KONTEKST:
-{context}
+İSTİFADƏÇİ SUALI:
+{user_query}
 """
-
-        api_key = os.getenv("OPENAI_API_KEY", "")
-        if not api_key:
-            return {
-                "answer": "OPENAI_API_KEY Render mühitində tapılmadı. Lütfən Environment Variables bölməsini yoxlayın.",
-                "sources": sources,
-                "score": round(best_score, 3)
-            }
-
-        try:
-            client = OpenAI(api_key=api_key)
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": question}
-                ],
-                temperature=0.3
-            )
-            ai_answer = response.choices[0].message.content
+            response = model.generate_content(prompt)
+            return response.text.strip()
         except Exception as e:
-            print(f"OpenAI Error: {e}")
-            ai_answer = f"OpenAI xətası: {str(e)}"
+            print(f"Gemini API Error: {e}")
 
-        return {
-            "answer": ai_answer,
-            "sources": sources,
-            "score": round(best_score, 3),
-        }
+    # Ehtiyat variant (Fallback): TF-IDF vasitəsilə sadə kontekst axtarışı
+    documents = [f"{k}: {v}" for k, v in profile_data.items()]
+    if not documents:
+        return "Məlumat tapılmadı."
+        
+    vectorizer = TfidfVectorizer().fit_transform(documents + [user_query])
+    vectors = vectorizer.toarray()
+    
+    cosine_sim = cosine_similarity([vectors[-1]], vectors[:-1])[0]
+    best_idx = cosine_sim.argmax()
+    
+    if cosine_sim[best_idx] > 0.1:
+        return f"Ruslan Cabbarov haqqında: {documents[best_idx]}"
+    
+    return "Salam! Mən Ruslan Cabbarovun AI assistentiyəm. Ruslanın təhsili, layihələri, Data Science və ML təcrübəsi barədə soruşa bilərsiniz."
