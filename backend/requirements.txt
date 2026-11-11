@@ -1,6 +1,5 @@
-fastapi
-uvicorn
-pydantic
-scikit-learn
-python-dotenv
-openai
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+scikit-learn==1.5.2
+pydantic==2.9.2
+openai>=1.58.0
