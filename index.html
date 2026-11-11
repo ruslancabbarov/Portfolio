@@ -1,469 +1,281 @@
 <!DOCTYPE html>
 <html lang="en" class="dark scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ruslan Cabbarov | Model Validation & Data Science</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        navy: { 900: '#0a0f1d', 800: '#0f172a', 700: '#1e293b', 600: '#334155' }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0f1d;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-        }
-        .glass-card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .glass-card-hover:hover {
-            transform: translateY(-5px);
-            border-color: rgba(16, 185, 129, 0.3);
-            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
-        }
-        .radial-glow {
-            background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 70%);
-        }
-        @keyframes spinSlow { to { transform: rotate(360deg); } }
-        .animate-spin-slow { animation: spinSlow 8s linear infinite; }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0f1d; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #10b981; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruslan Cabbarov | Model Validation & Data Science</title>
+ 
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'], mono: ['Fira Code','monospace'] } } } }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(#0a0f1d,#0d1b2e 70%,#10263d);color:#f8fafc;overflow-x:hidden;padding-bottom:80px;min-height:100vh}
+html.light body{background:linear-gradient(#e3f0ff,#f6faff 60%,#fff);color:#0f172a}
+ 
+.glass-card{background:rgba(15,23,42,.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 50px rgba(0,0,0,.45)}
+html.light .glass-card{background:rgba(255,255,255,.8);border-color:rgba(15,23,42,.08);box-shadow:0 12px 30px rgba(30,64,175,.08)}
+.card-hover{transition:transform .3s,border-color .3s,box-shadow .3s}
+.card-hover:hover{transform:translateY(-5px);border-color:var(--c);box-shadow:0 10px 30px -10px var(--c)}
+html.light .card-hover:hover{border-color:var(--l);box-shadow:0 10px 30px -12px var(--l)}
+ 
+.acc{color:var(--c)} html.light .acc{color:var(--l)}
+.tag{padding:.25rem .75rem;border-radius:.5rem;font-size:.75rem;background:rgba(148,163,184,.15);color:var(--c)}
+html.light .tag{background:rgba(15,23,42,.06);color:var(--l)}
+ 
+/* light-mode overrides for classes used by markup and chat.js */
+html.light .text-slate-100,html.light .text-slate-200{color:#0f172a}
+html.light .text-slate-400,html.light .text-slate-500{color:#475569}
+html.light .text-emerald-400,html.light .text-emerald-300{color:#047857}
+html.light .text-red-400{color:#b91c1c}
+html.light .border-slate-800,html.light .border-slate-800\/80,html.light .border-slate-700\/80,html.light .border-slate-700\/50{border-color:rgba(15,23,42,.1)}
+html.light .bg-slate-800\/60{background:#e8eef7}
+html.light .bg-slate-900\/90{background:rgba(255,255,255,.92)}
+html.light .bg-slate-950{background:#fff}
+ 
+#snow{position:fixed;inset:0;z-index:1;pointer-events:none}
+#ground{position:fixed;left:0;right:0;bottom:0;height:64px;z-index:20;pointer-events:none;background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(255,255,255,.4),transparent 75%)}
+html.light #ground{background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(147,197,253,.55),transparent 75%)}
+ 
+/* snowman */
+#snowman{position:fixed;left:0;bottom:4px;z-index:50;width:84px;cursor:pointer;will-change:transform}
+#snowman svg{display:block;width:84px;height:auto;overflow:visible;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3))}
+#smFlip{transition:transform .25s}
+.sm-body,.arm-l,.arm-r{transform-box:view-box}
+.sm-body{transform-origin:40px 120px}
+.arm-l{transform-origin:30px 56px}.arm-r{transform-origin:50px 56px}
+.walking .sm-body{animation:waddle .55s ease-in-out infinite alternate}
+.walking .arm-l{animation:armL .55s ease-in-out infinite alternate}
+.walking .arm-r{animation:armR .55s ease-in-out infinite alternate}
+@keyframes waddle{from{transform:rotate(-4deg)}to{transform:rotate(4deg) translateY(-3px)}}
+@keyframes armL{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+@keyframes armR{from{transform:rotate(16deg)}to{transform:rotate(-16deg)}}
+#snowman svg.jump{animation:jump .6s}
+@keyframes jump{40%{transform:translateY(-28px)}}
+#smBubble{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;padding:.4rem .75rem;border-radius:.75rem;font-size:.75rem;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none;background:#fff;color:#0f172a;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+ 
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0a0f1d}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}
+@media (prefers-reduced-motion:reduce){.walking *{animation:none!important}}
+</style>
 </head>
-
-<body class="relative min-h-screen">
-
-    <!-- Fon effektləri -->
-    <div class="fixed inset-0 pointer-events-none z-0 radial-glow"></div>
-    <div class="fixed top-1/4 -left-48 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="fixed bottom-1/4 -right-48 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-    <!-- Əsas konteyner: bunu bağlayan </div> footer-dən sonrakıdır -->
-    <div class="relative z-10 max-w-6xl mx-auto px-6">
-
-        <!-- HEADER / HERO SECTION -->
-        <header class="py-12 border-b border-slate-800/80">
-<!-- HEADER / HERO SECTION -->
-        <header class="py-12 border-b border-slate-800/80">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                
-                <!-- PROFIL ŞƏKLİ VƏ MƏTN (Layout Düzəlişi) -->
-                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left flex-1 min-w-0">
-                    
-                    <!-- Dairəvi Profil Şəkli -->
-                    <div class="relative w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-emerald-500/80 shadow-xl shadow-emerald-500/20 shrink-0 bg-slate-900">
-                        <img src="assets/images/profile.jpg" alt="Ruslan Cabbarov" class="w-full h-full object-cover scale-125 object-top">                    </div>
-
-                    <!-- Ad və Titul -->
-                    <div class="flex-1 min-w-0">
-                        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-100 tracking-tight">
-                            Ruslan Cabbarov
-                        </h1>
-                        <p class="text-lg text-emerald-400 font-mono mt-2">
-                            Model Validation & Credit Risk Analyst (Intern) | Data Scientist
-                        </p>
-                        <p class="text-slate-400 text-sm mt-3 max-w-2xl leading-relaxed">
-                            UNEC Business Administration student with a Data Science background. Specializing in credit risk scoring (Basel III, IFRS 9), Machine Learning pipelines, and NLP transformers.
-                        </p>
-                    </div>
-
-                </div>
-
-                <!-- CV DOWNLOAD & SOCIAL LINKS -->
-                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-4 shrink-0">
-                    <a href="assets/CV.pdf" download="Ruslan_Cabbarov_CV.pdf" 
-                       class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20">
-                        <i class="fa-solid fa-download"></i> Download CV
-                    </a>
-
-                    <div class="flex items-center gap-3 text-xl text-slate-400">
-                        <a href="https://github.com/ruslancabbarov" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors">
-                            <i class="fa-brands fa-github"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/in/ruslan-jabbarov-0b1aa9294" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors">
-                            <i class="fa-brands fa-linkedin"></i>
-                        </a>
-                        <a href="mailto:ruslaanc0000@gmail.com" class="hover:text-emerald-400 transition-colors">
-                            <i class="fa-solid fa-envelope"></i>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </header>
-        <!-- SKILLS SECTION -->
-        <section id="skills" class="py-16 border-b border-slate-800/80">
-            <div class="mb-10">
-                <h2 class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">
-                    // TECHNICAL EXPERTISE
-                </h2>
-                <h3 class="text-3xl font-bold text-slate-100">
-                    Skills & Competencies
-                </h3>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Skill Category 1 -->
-                <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                    <div class="flex items-center gap-3 mb-4">
-                        <i class="fa-solid fa-shield-halved text-emerald-400 text-xl"></i>
-                        <h4 class="text-lg font-bold text-slate-100">Model Risk & Validation</h4>
-                    </div>
-                    <ul class="text-slate-400 text-sm space-y-2">
-                        <li>Credit Risk (PD / LGD / EAD)</li>
-                        <li>IFRS 9 & Basel III Guidelines</li>
-                        <li>Discrimination, Calibration & Backtesting</li>
-                        <li>SHAP Explainability & Stability Tests</li>
-                        <li>Data Quality Audits & Reports</li>
-                    </ul>
-                </div>
-
-                <!-- Skill Category 2 -->
-                <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                    <div class="flex items-center gap-3 mb-4">
-                        <i class="fa-solid fa-code text-cyan-400 text-xl"></i>
-                        <h4 class="text-lg font-bold text-slate-100">Data Science & ML</h4>
-                    </div>
-                    <ul class="text-slate-400 text-sm space-y-2">
-                        <li>Python (Pandas, NumPy, Scikit-Learn)</li>
-                        <li>LightGBM, XGBoost, Random Forest</li>
-                        <li>SQL (PostgreSQL, Supabase)</li>
-                        <li>Geospatial Analysis (GeoPandas, Folium)</li>
-                        <li>Parquet Data Formatting & PyArrow</li>
-                    </ul>
-                </div>
-
-                <!-- Skill Category 3 -->
-                <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                    <div class="flex items-center gap-3 mb-4">
-                        <i class="fa-solid fa-microchip text-violet-400 text-xl"></i>
-                        <h4 class="text-lg font-bold text-slate-100">GenAI & Deployment</h4>
-                    </div>
-                    <ul class="text-slate-400 text-sm space-y-2">
-                        <li>RAG & LLM Agents (Gemini API)</li>
-                        <li>Transformer NLP (XLM-RoBERTa, TF-IDF)</li>
-                        <li>REST APIs (FastAPI)</li>
-                        <li>Docker, Streamlit Cloud, Render, Netlify</li>
-                        <li>Git, GitHub, VS Code, Conda</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- FEATURED PROJECTS SECTION -->
-        <section id="projects" class="py-16 border-b border-slate-800/80">
-            <div class="mb-10">
-                <h2 class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">
-                    // SELECTED WORK
-                </h2>
-                <h3 class="text-3xl font-bold text-slate-100">
-                    Featured Projects
-                </h3>
-                <p class="text-slate-400 text-sm mt-3 max-w-2xl">
-                    A selection of projects demonstrating my experience in data science, machine learning, credit risk analytics, and software development.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                <!-- Project 1 -->
-                <article class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800 flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-mono text-emerald-400 uppercase">Credit Risk Analytics</span>
-                        <i class="fa-solid fa-chart-line text-emerald-400 text-lg"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-100 mb-3">Home Credit Risk Management</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-5">
-                        End-to-end credit risk scoring model built on 307,511 loan applications (AUC-ROC: 0.78, Gini: 0.56) aligned with Basel III standards and SHAP explainability.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-emerald-300 text-xs">Python</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-emerald-300 text-xs">LightGBM</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-emerald-300 text-xs">SHAP</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-emerald-300 text-xs">FastAPI</span>
-                    </div>
-                    <a href="https://github.com/ruslancabbarov/Home-Credit-Risk-Management" target="_blank" rel="noopener noreferrer" class="mt-auto text-sm font-semibold text-emerald-400 hover:underline">
-                        <i class="fa-brands fa-github mr-2"></i>GitHub Repository
-                    </a>
-                </article>
-
-                <!-- Project 2 -->
-                <article class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800 flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-mono text-cyan-400 uppercase">Urban Mobility & GIS</span>
-                        <i class="fa-solid fa-map-location-dot text-cyan-400 text-lg"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-100 mb-3">AYNA Transport Tech Project</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-5">
-                        Geospatial urban mobility mapping prototype for bicycle infrastructure planning using GeoPandas, Shapely, Folium, and interactive Streamlit web apps.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-cyan-300 text-xs">Python</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-cyan-300 text-xs">GeoPandas</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-cyan-300 text-xs">Shapely</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-cyan-300 text-xs">Streamlit</span>
-                    </div>
-                    <a href="https://github.com/ruslancabbarov/AYNAHackathon" target="_blank" rel="noopener noreferrer" class="mt-auto text-sm font-semibold text-cyan-400 hover:underline">
-                        <i class="fa-brands fa-github mr-2"></i>GitHub Repository
-                    </a>
-                </article>
-
-                <!-- Project 3 -->
-                <article class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800 flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-mono text-violet-400 uppercase">Financial Intelligence</span>
-                        <i class="fa-solid fa-building-columns text-violet-400 text-lg"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-100 mb-3">Azerbaijan Banking Intelligence</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-5">
-                        Banking credit risk data processing pipeline optimized using Parquet binary formatting, PyArrow, and automated financial analytics.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-violet-300 text-xs">Python</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-violet-300 text-xs">Pandas</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-violet-300 text-xs">PyArrow</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-violet-300 text-xs">Parquet</span>
-                    </div>
-                    <a href="https://github.com/ruslancabbarov/Azerbaijan-Banking-Intelligence" target="_blank" rel="noopener noreferrer" class="mt-auto text-sm font-semibold text-violet-400 hover:underline">
-                        <i class="fa-brands fa-github mr-2"></i>GitHub Repository
-                    </a>
-                </article>
-
-                <!-- Project 4 -->
-                <article class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800 flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-mono text-amber-400 uppercase">Predictive Analytics</span>
-                        <i class="fa-solid fa-users text-amber-400 text-lg"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-100 mb-3">Predictive HR & Churn Modeling</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-5">
-                        Predictive machine learning pipeline analyzing employee churn (Random Forest 98% accuracy) and optimal decision thresholds.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-amber-300 text-xs">Python</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-amber-300 text-xs">Scikit-learn</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-amber-300 text-xs">Random Forest</span>
-                    </div>
-                    <a href="https://github.com/ruslancabbarov/Predictive-HR-Modeling" target="_blank" rel="noopener noreferrer" class="mt-auto text-sm font-semibold text-amber-400 hover:underline">
-                        <i class="fa-brands fa-github mr-2"></i>GitHub Repository
-                    </a>
-                </article>
-
-                <!-- Project 5 -->
-                <article class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800 flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-mono text-sky-400 uppercase">ML Web Application</span>
-                        <i class="fa-solid fa-car text-sky-400 text-lg"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-100 mb-3">Auto MPG Fuel Predictor</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-5">
-                        Interactive Machine Learning web application deployed on Streamlit Community Cloud predicting vehicle fuel efficiency metrics.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-sky-300 text-xs">Python</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-sky-300 text-xs">Scikit-learn</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-sky-300 text-xs">Streamlit</span>
-                    </div>
-                    <a href="https://github.com/ruslancabbarov/auto-mpg-app" target="_blank" rel="noopener noreferrer" class="mt-auto text-sm font-semibold text-sky-400 hover:underline">
-                        <i class="fa-brands fa-github mr-2"></i>GitHub Repository
-                    </a>
-                </article>
-
-                <!-- Project 6 -->
-                <article class="glass-card glass-card-hover p-6 rounded-2xl border border-slate-800 flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-mono text-pink-400 uppercase">Gen AI & Web</span>
-                        <i class="fa-solid fa-robot text-pink-400 text-lg"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-100 mb-3">AI Portfolio & RAG Chatbot</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-5">
-                        Personal website integrated with FastAPI, Gemini API RAG model hosted on Render, and responsive Netlify static frontend.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-pink-300 text-xs">FastAPI</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-pink-300 text-xs">Gemini API</span>
-                        <span class="px-3 py-1 rounded-lg bg-slate-800 text-pink-300 text-xs">RAG</span>
-                    </div>
-                    <a href="https://github.com/ruslancabbarov/Portfolio" target="_blank" rel="noopener noreferrer" class="mt-auto text-sm font-semibold text-pink-400 hover:underline">
-                        <i class="fa-brands fa-github mr-2"></i>GitHub Repository
-                    </a>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- CONTACT SECTION -->
-        <section id="contact" class="py-16 border-b border-slate-800/80">
-            <div class="mb-10 text-center">
-                <h2 class="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">
-                    // GET IN TOUCH
-                </h2>
-                <h3 class="text-3xl font-bold text-slate-100">
-                    Contact & Connect
-                </h3>
-                <p class="text-slate-400 text-sm mt-3 max-w-xl mx-auto">
-                    Feel free to reach out for collaboration, project inquiries, or model validation discussions.
-                </p>
-            </div>
-
-            <div class="flex flex-wrap justify-center gap-6 max-w-2xl mx-auto">
-                <a href="mailto:ruslaanc0000@gmail.com" class="glass-card glass-card-hover px-6 py-4 rounded-xl border border-slate-800 flex items-center gap-3 text-slate-200">
-                    <i class="fa-solid fa-envelope text-emerald-400 text-xl"></i>
-                    <span>ruslaanc0000@gmail.com</span>
-                </a>
-                <a href="https://www.linkedin.com/in/ruslan-jabbarov-0b1aa9294" target="_blank" rel="noopener noreferrer" class="glass-card glass-card-hover px-6 py-4 rounded-xl border border-slate-800 flex items-center gap-3 text-slate-200">
-                    <i class="fa-brands fa-linkedin text-cyan-400 text-xl"></i>
-                    <span>LinkedIn Profile</span>
-                </a>
-                <a href="https://github.com/ruslancabbarov" target="_blank" rel="noopener noreferrer" class="glass-card glass-card-hover px-6 py-4 rounded-xl border border-slate-800 flex items-center gap-3 text-slate-200">
-                    <i class="fa-brands fa-github text-violet-400 text-xl"></i>
-                    <span>GitHub Profile</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="py-8 text-center text-xs text-slate-500">
-            <p>© 2026 Ruslan Cabbarov. All rights reserved.</p>
-        </footer>
-
-    </div>
-
-    <!-- DRAGGABLE ROTATING ROBOT CHATBOT BUTTON -->
-    <div id="draggableChatbot" class="fixed bottom-6 right-6 z-50 touch-none select-none">
-        <button onclick="handleBotClick()" 
-                class="w-16 h-16 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-500 text-slate-950 flex items-center justify-center shadow-2xl shadow-emerald-500/40 text-3xl transition-all transform hover:scale-110 active:scale-95 group relative">
-            
-            <!-- Rotating Robot Icon -->
-            <i class="fa-solid fa-robot animate-spin-slow group-hover:rotate-12 transition-transform duration-300"></i>
-
-            <!-- Glowing Ring Effect -->
-            <span class="absolute -inset-1 rounded-full bg-emerald-400/30 blur-sm -z-10 animate-pulse"></span>
-        </button>
-    </div>
-
-    <!-- CHATBOT WINDOW MODAL -->
-    <div id="chatbotModal" class="fixed bottom-24 right-6 z-50 hidden w-80 md:w-96 glass-card border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[450px]">
-        <div class="bg-slate-900/90 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-robot text-emerald-400"></i>
-                <span class="font-bold text-slate-200 text-sm">RuslanAI Assistant</span>
-            </div>
-            <button onclick="toggleChatbot()" class="text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+ 
+<body>
+<canvas id="snow"></canvas>
+<div id="ground"></div>
+ 
+<button id="themeBtn" onclick="toggleTheme()" aria-label="Switch theme"
+  class="fixed top-4 right-4 z-50 w-11 h-11 rounded-full glass-card flex items-center justify-center text-slate-200">
+  <i id="themeIcon" class="fa-solid fa-sun"></i>
+</button>
+ 
+<div class="relative z-10 max-w-6xl mx-auto px-6">
+ 
+  <header class="py-14 border-b border-slate-800/80">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left flex-1 min-w-0">
+        <div class="relative w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-emerald-500/80 shadow-xl shrink-0 bg-slate-900">
+          <img src="assets/images/profile.jpg" alt="Ruslan Cabbarov" class="w-full h-full object-cover scale-125 object-top">
         </div>
-        <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
-            <div class="bg-slate-800/60 text-slate-200 p-3 rounded-xl max-w-[85%] border border-slate-700/50">
-                Salam! Mən Ruslanın AI assistentiyəm. Ruslanın təcrübəsi, layihələri və ya bacarıqları haqqında nə bilmək istəyirsiniz?
-            </div>
+        <div class="flex-1 min-w-0">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-slate-100 tracking-tight">Ruslan Cabbarov</h1>
+          <p class="text-lg text-emerald-400 font-mono mt-2">Model Validation & Credit Risk Analyst (Intern) | Data Scientist</p>
+          <p class="text-slate-400 text-sm mt-3 max-w-2xl leading-relaxed">UNEC Business Administration student with a Data Science background. Specializing in credit risk scoring (Basel III, IFRS 9), Machine Learning pipelines, and NLP transformers.</p>
         </div>
-        <div class="p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
-            <input type="text" id="chatInput" placeholder="Sualınızı yazın..." class="flex-1 bg-slate-950 text-slate-200 text-sm px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-emerald-500" onkeypress="if(event.key==='Enter') sendMessage()">
-            <button onclick="sendMessage()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-xl font-semibold text-sm">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
+      </div>
+      <div class="flex flex-wrap items-center justify-center sm:justify-start gap-4 shrink-0">
+        <a href="assets/CV.pdf" download="Ruslan_Cabbarov_CV.pdf" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm transition-colors flex items-center gap-2">
+          <i class="fa-solid fa-download"></i> Download CV
+        </a>
+        <div class="flex items-center gap-3 text-xl text-slate-400">
+          <a href="https://github.com/ruslancabbarov" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="hover:text-emerald-400 transition-colors"><i class="fa-brands fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/ruslan-jabbarov-0b1aa9294" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="hover:text-emerald-400 transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="mailto:ruslaanc0000@gmail.com" aria-label="Email" class="hover:text-emerald-400 transition-colors"><i class="fa-solid fa-envelope"></i></a>
         </div>
+      </div>
     </div>
-
-    <script>
-        // Drag and drop logic for touch and mouse
-        const botElement = document.getElementById("draggableChatbot");
-        const modalElement = document.getElementById("chatbotModal");
-        let isDragging = false;
-        let hasMoved = false;
-        let offsetX = 0, offsetY = 0;
-
-        function startDrag(e) {
-            isDragging = true;
-            hasMoved = false;
-            const clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
-            
-            const rect = botElement.getBoundingClientRect();
-            offsetX = clientX - rect.left;
-            offsetY = clientY - rect.top;
-        }
-
-        function doDrag(e) {
-            if (!isDragging) return;
-            hasMoved = true;
-            e.preventDefault();
-
-            const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
-
-            let newX = clientX - offsetX;
-            let newY = clientY - offsetY;
-
-            const maxX = window.innerWidth - botElement.offsetWidth;
-            const maxY = window.innerHeight - botElement.offsetHeight;
-
-            newX = Math.max(0, Math.min(newX, maxX));
-            newY = Math.max(0, Math.min(newY, maxY));
-
-            botElement.style.left = newX + "px";
-            botElement.style.top = newY + "px";
-            botElement.style.bottom = "auto";
-            botElement.style.right = "auto";
-        }
-
-        function stopDrag() {
-            isDragging = false;
-        }
-
-        function toggleChatbot() {
-            modalElement.classList.toggle("hidden");
-        }
-
-        function handleBotClick() {
-            if (!hasMoved) {
-                toggleChatbot();
-            }
-        }
-
-        // Mouse Events
-        botElement.addEventListener("mousedown", startDrag);
-        window.addEventListener("mousemove", doDrag);
-        window.addEventListener("mouseup", stopDrag);
-
-        // Touch Events
-        botElement.addEventListener("touchstart", startDrag, { passive: false });
-        window.addEventListener("touchmove", doDrag, { passive: false });
-        window.addEventListener("touchend", stopDrag);
-    </script>
-
-    <!-- CHATBOT SCRIPT -->
-    <script src="assets/js/chat.js"></script>
+  </header>
+ 
+  <section id="skills" class="py-16 border-b border-slate-800/80">
+    <h2 class="text-3xl font-bold text-slate-100 mb-10">Skills & competencies</h2>
+    <div id="skillsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+  </section>
+ 
+  <section id="projects" class="py-16 border-b border-slate-800/80">
+    <h2 class="text-3xl font-bold text-slate-100">Featured projects</h2>
+    <p class="text-slate-400 text-sm mt-3 mb-10 max-w-2xl">Projects across data science, machine learning, credit risk analytics, and software development.</p>
+    <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+  </section>
+ 
+  <section id="contact" class="py-16 border-b border-slate-800/80">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold text-slate-100">Contact</h2>
+      <p class="text-slate-400 text-sm mt-3 max-w-xl mx-auto">Reach out for collaboration, project inquiries, or model validation discussions.</p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-6 max-w-2xl mx-auto">
+      <a href="mailto:ruslaanc0000@gmail.com" class="glass-card card-hover px-6 py-4 rounded-xl flex items-center gap-3 text-slate-200" style="--c:#34d399;--l:#047857"><i class="fa-solid fa-envelope acc text-xl"></i><span>ruslaanc0000@gmail.com</span></a>
+      <a href="https://www.linkedin.com/in/ruslan-jabbarov-0b1aa9294" target="_blank" rel="noopener noreferrer" class="glass-card card-hover px-6 py-4 rounded-xl flex items-center gap-3 text-slate-200" style="--c:#22d3ee;--l:#0e7490"><i class="fa-brands fa-linkedin acc text-xl"></i><span>LinkedIn profile</span></a>
+      <a href="https://github.com/ruslancabbarov" target="_blank" rel="noopener noreferrer" class="glass-card card-hover px-6 py-4 rounded-xl flex items-center gap-3 text-slate-200" style="--c:#a78bfa;--l:#6d28d9"><i class="fa-brands fa-github acc text-xl"></i><span>GitHub profile</span></a>
+    </div>
+  </section>
+ 
+  <footer class="py-8 text-center text-xs text-slate-500"><p>© 2026 Ruslan Cabbarov. All rights reserved.</p></footer>
+</div>
+ 
+<!-- Snowman chatbot -->
+<div id="snowman" role="button" tabindex="0" aria-label="Open chat with the snowman assistant">
+  <div id="smBubble"></div>
+  <div id="smFlip">
+    <svg id="smSvg" viewBox="0 0 80 120">
+      <g class="sm-body">
+        <g class="arm-l"><path d="M30 56 L8 44 M14 47 L9 38" stroke="#7c4a1d" stroke-width="3" stroke-linecap="round" fill="none"/></g>
+        <g class="arm-r"><path d="M50 56 L72 44 M66 47 L71 38" stroke="#7c4a1d" stroke-width="3" stroke-linecap="round" fill="none"/></g>
+        <circle cx="40" cy="94" r="24" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+        <circle cx="40" cy="62" r="17" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+        <circle cx="40" cy="36" r="13" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+        <ellipse cx="30" cy="117" rx="8" ry="3" fill="#1e293b"/><ellipse cx="50" cy="117" rx="8" ry="3" fill="#1e293b"/>
+        <rect x="29" y="12" width="22" height="14" rx="2" fill="#1e293b"/>
+        <rect x="24" y="24" width="32" height="4" rx="2" fill="#1e293b"/>
+        <rect x="29" y="21" width="22" height="3" fill="#ef4444"/>
+        <circle cx="35" cy="34" r="1.8" fill="#0f172a"/><circle cx="45" cy="34" r="1.8" fill="#0f172a"/>
+        <path d="M40 38 L53 41 L40 43Z" fill="#f97316"/>
+        <path d="M30 47 Q40 54 50 47" stroke="#ef4444" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <rect x="46" y="49" width="7" height="16" rx="3" fill="#dc2626"/>
+        <circle cx="40" cy="64" r="2" fill="#0f172a"/><circle cx="40" cy="74" r="2" fill="#0f172a"/><circle cx="40" cy="90" r="2.2" fill="#0f172a"/>
+      </g>
+    </svg>
+  </div>
+</div>
+ 
+<div id="chatbotModal" class="fixed bottom-28 right-4 z-50 hidden w-[calc(100vw-2rem)] sm:w-96 glass-card border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[450px]">
+  <div class="bg-slate-900/90 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+    <div class="flex items-center gap-2"><span aria-hidden="true">⛄</span><span class="font-bold text-slate-200 text-sm">RuslanAI Assistant</span></div>
+    <button onclick="toggleSnowChat()" aria-label="Close chat" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
+    <div class="bg-slate-800/60 text-slate-200 p-3 rounded-xl max-w-[85%] border border-slate-700/50">Salam! Mən Ruslanın AI assistentiyəm. Ruslanın təcrübəsi, layihələri və ya bacarıqları haqqında nə bilmək istəyirsiniz?</div>
+  </div>
+  <div class="p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
+    <input type="text" id="chatInput" placeholder="Sualınızı yazın..." class="flex-1 bg-slate-950 text-slate-200 text-sm px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-emerald-500" onkeypress="if(event.key==='Enter') sendMessage()">
+    <button onclick="sendMessage()" aria-label="Send" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2 rounded-xl font-semibold text-sm"><i class="fa-solid fa-paper-plane"></i></button>
+  </div>
+</div>
+ 
+<script>
+/* ---------- Content (edit here) ---------- */
+const SKILLS = [
+ {i:'fa-shield-halved',c:'#34d399',l:'#047857',t:'Model risk & validation',items:['Credit Risk (PD / LGD / EAD)','IFRS 9 & Basel III Guidelines','Discrimination, Calibration & Backtesting','SHAP Explainability & Stability Tests','Data Quality Audits & Reports']},
+ {i:'fa-code',c:'#22d3ee',l:'#0e7490',t:'Data science & ML',items:['Python (Pandas, NumPy, Scikit-Learn)','LightGBM, XGBoost, Random Forest','SQL (PostgreSQL, Supabase)','Geospatial Analysis (GeoPandas, Folium)','Parquet Data Formatting & PyArrow']},
+ {i:'fa-microchip',c:'#a78bfa',l:'#6d28d9',t:'GenAI & deployment',items:['RAG & LLM Agents (OpenAI API)','Transformer NLP (XLM-RoBERTa, TF-IDF)','REST APIs (FastAPI)','Docker, Streamlit Cloud, Render, Vercel','Git, GitHub, VS Code, Conda']}
+];
+const PROJECTS = [
+ {k:'Credit risk analytics',i:'fa-chart-line',c:'#34d399',l:'#047857',t:'Home Credit Risk Management',d:'End-to-end credit risk scoring model built on 307,511 loan applications (AUC-ROC: 0.78, Gini: 0.56) aligned with Basel III standards and SHAP explainability.',tags:['Python','LightGBM','SHAP','FastAPI'],g:'Home-Credit-Risk-Management'},
+ {k:'Urban mobility & GIS',i:'fa-map-location-dot',c:'#22d3ee',l:'#0e7490',t:'AYNA Transport Tech Project',d:'Geospatial urban mobility mapping prototype for bicycle infrastructure planning using GeoPandas, Shapely, Folium, and interactive Streamlit web apps.',tags:['Python','GeoPandas','Shapely','Streamlit'],g:'AYNAHackathon'},
+ {k:'Financial intelligence',i:'fa-building-columns',c:'#a78bfa',l:'#6d28d9',t:'Azerbaijan Banking Intelligence',d:'Banking credit risk data processing pipeline optimized using Parquet binary formatting, PyArrow, and automated financial analytics.',tags:['Python','Pandas','PyArrow','Parquet'],g:'Azerbaijan-Banking-Intelligence'},
+ {k:'Predictive analytics',i:'fa-users',c:'#fbbf24',l:'#b45309',t:'Predictive HR & Churn Modeling',d:'Predictive machine learning pipeline analyzing employee churn (Random Forest 98% accuracy) and optimal decision thresholds.',tags:['Python','Scikit-learn','Random Forest'],g:'Predictive-HR-Modeling'},
+ {k:'ML web application',i:'fa-car',c:'#38bdf8',l:'#0369a1',t:'Auto MPG Fuel Predictor',d:'Interactive Machine Learning web application deployed on Streamlit Community Cloud predicting vehicle fuel efficiency metrics.',tags:['Python','Scikit-learn','Streamlit'],g:'auto-mpg-app'},
+ {k:'GenAI & web',i:'fa-robot',c:'#f472b6',l:'#be185d',t:'AI Portfolio & RAG Chatbot',d:'Personal website with a FastAPI + OpenAI RAG chatbot hosted on Render and a responsive Vercel frontend.',tags:['FastAPI','OpenAI API','RAG'],g:'Portfolio'}
+];
+const GH = 'https://github.com/ruslancabbarov/';
+ 
+document.getElementById('skillsGrid').innerHTML = SKILLS.map(s => `
+ <div class="glass-card card-hover p-6 rounded-2xl" style="--c:${s.c};--l:${s.l}">
+  <div class="flex items-center gap-3 mb-4"><i class="fa-solid ${s.i} acc text-xl"></i><h3 class="text-lg font-bold text-slate-100">${s.t}</h3></div>
+  <ul class="text-slate-400 text-sm space-y-2">${s.items.map(x => `<li>${x}</li>`).join('')}</ul>
+ </div>`).join('');
+ 
+document.getElementById('projectsGrid').innerHTML = PROJECTS.map(p => `
+ <article class="glass-card card-hover p-6 rounded-2xl flex flex-col" style="--c:${p.c};--l:${p.l}">
+  <div class="flex items-center justify-between mb-4"><span class="text-xs font-mono acc">${p.k}</span><i class="fa-solid ${p.i} acc text-lg"></i></div>
+  <h3 class="text-xl font-bold text-slate-100 mb-3">${p.t}</h3>
+  <p class="text-slate-400 text-sm leading-relaxed mb-5">${p.d}</p>
+  <div class="flex flex-wrap gap-2 mb-6">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+  <a href="${GH}${p.g}" target="_blank" rel="noopener noreferrer" class="mt-auto text-sm font-semibold acc hover:underline"><i class="fa-brands fa-github mr-2"></i>GitHub repository</a>
+ </article>`).join('');
+ 
+/* ---------- Theme ---------- */
+function applyTheme(light){
+  document.documentElement.classList.toggle('light', light);
+  document.documentElement.classList.toggle('dark', !light);
+  document.getElementById('themeIcon').className = light ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+  try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch(e) {}
+}
+function toggleTheme(){ applyTheme(!document.documentElement.classList.contains('light')); }
+try { applyTheme(localStorage.getItem('theme') === 'light'); } catch(e) {}
+ 
+/* ---------- Snow ---------- */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv = document.getElementById('snow'), cx = cv.getContext('2d');
+let W, H, flakes = [], mx = -999, my = -999, wind = 0;
+const mk = () => ({x: Math.random()*W, y: Math.random()*H, r: Math.random()*2.6+.8, s: Math.random()*.8+.4, d: Math.random()*6.28});
+function resize(){ W = cv.width = innerWidth; H = cv.height = innerHeight; flakes = Array.from({length: Math.min(170, Math.floor(W*H/9000))}, mk); }
+addEventListener('resize', resize); resize();
+addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; wind = Math.max(-2, Math.min(2, wind + e.movementX*.03)); });
+function snowTick(){
+  cx.clearRect(0, 0, W, H);
+  cx.fillStyle = document.documentElement.classList.contains('light') ? 'rgba(96,165,250,.85)' : 'rgba(255,255,255,.9)';
+  for (const f of flakes){
+    f.d += .012; f.x += Math.sin(f.d)*.4 + wind; f.y += f.s*(f.r*.45+.6);
+    const dx = f.x-mx, dy = f.y-my, dist = Math.hypot(dx, dy);
+    if (dist < 90 && dist > 0){ f.x += dx/dist*2.2; f.y += dy/dist*2.2; }
+    if (f.y > H+5){ f.y = -5; f.x = Math.random()*W; }
+    if (f.x > W+5) f.x = -5; if (f.x < -5) f.x = W+5;
+    cx.beginPath(); cx.arc(f.x, f.y, f.r, 0, 6.283); cx.fill();
+  }
+  wind *= .96;
+  requestAnimationFrame(snowTick);
+}
+if (!reduce) snowTick();
+ 
+/* ---------- Snowman: wanders along the bottom, click to chat ---------- */
+const sm = document.getElementById('snowman'), flip = document.getElementById('smFlip'),
+      bub = document.getElementById('smBubble'), svg = document.getElementById('smSvg');
+let chatOpen = false, hover = false, px = Math.max(20, innerWidth-200), tx = px, idle = 1.5, last = 0;
+sm.addEventListener('mouseenter', () => hover = true);
+sm.addEventListener('mouseleave', () => hover = false);
+ 
+function say(t, ms = 3200){ bub.textContent = t; bub.style.opacity = 1; setTimeout(() => bub.style.opacity = 0, ms); }
+const HELLOS = ['Salam! Mənə toxun 👋', 'Sualın var? ❄', 'Ruslan haqqında soruş!', 'Qar yağır, mən gəzirəm ⛄'];
+setInterval(() => { if (!chatOpen && bub.style.opacity !== '1') say(HELLOS[Math.floor(Math.random()*HELLOS.length)]); }, 9000);
+setTimeout(() => say(HELLOS[0]), 1500);
+ 
+function walk(ts){
+  const dt = Math.min((ts-last)/1000 || 0, .05); last = ts;
+  const maxX = Math.max(20, innerWidth-90);
+  if (!reduce && !chatOpen && !hover){
+    if (Math.abs(tx-px) > 3){
+      px += Math.sign(tx-px)*55*dt;
+      sm.classList.add('walking');
+      flip.style.transform = tx < px ? 'scaleX(-1)' : 'scaleX(1)';
+    } else {
+      sm.classList.remove('walking');
+      idle -= dt;
+      if (idle <= 0){ tx = 20 + Math.random()*(maxX-20); idle = 1.5 + Math.random()*3; }
+    }
+  } else sm.classList.remove('walking');
+  px = Math.min(px, maxX);
+  sm.style.transform = `translateX(${px}px)`;
+  requestAnimationFrame(walk);
+}
+requestAnimationFrame(walk);
+ 
+function toggleSnowChat(){
+  const m = document.getElementById('chatbotModal');
+  m.classList.toggle('hidden');
+  chatOpen = !m.classList.contains('hidden');
+  if (chatOpen){ bub.style.opacity = 0; document.getElementById('chatInput').focus(); }
+}
+function snowmanClick(){ svg.classList.add('jump'); setTimeout(() => svg.classList.remove('jump'), 600); toggleSnowChat(); }
+sm.addEventListener('click', snowmanClick);
+sm.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); snowmanClick(); } });
+</script>
+ 
+<!-- Chat logic: sendMessage() lives here -->
+<script src="assets/js/chat.js"></script>
 </body>
 </html>
+ 
