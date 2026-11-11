@@ -1,80 +1,71 @@
-const BACKEND_URL = "https://portfolio-1uj6.onrender.com"; 
-
-function toggleChatbot() {
-    const modal = document.getElementById("chatbotModal");
-    if (modal) {
-        modal.classList.toggle("hidden");
-    }
-}
+const API_URL = "https://portfolio-1uj6.onrender.com/api/chat";
 
 async function sendMessage() {
+    // Təkrar göndərməni bloklayırıq
+    if (window.chatBusy) return;
+    
     const inputField = document.getElementById("chatInput");
-    const messagesContainer = document.getElementById("chatMessages");
-    
-    if (!inputField || !messagesContainer) return;
-    
-    const messageText = inputField.value.trim();
-    if (!messageText) return;
+    const message = inputField.value.trim();
+    if (!message) return;
 
-    // 1. İstifadəçinin mesajını göstər
-    const userBubble = document.createElement("div");
-    userBubble.className = "bg-emerald-500/20 text-emerald-300 p-3 rounded-xl max-w-[85%] ml-auto border border-emerald-500/30 text-right";
-    userBubble.innerText = messageText;
-    messagesContainer.appendChild(userBubble);
+    window.chatBusy = true;
+    const chatMessages = document.getElementById("chatMessages");
+
+    // İstifadəçinin mesajı
+    const userDiv = document.createElement("div");
+    userDiv.className = "bg-emerald-500/10 text-emerald-300 p-3 rounded-xl max-w-[85%] ml-auto border border-emerald-500/20";
+    userDiv.innerText = message;
+    chatMessages.appendChild(userDiv);
 
     inputField.value = "";
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    // 2. Yüklənir mesajı
-    const loadingBubble = document.createElement("div");
-    loadingBubble.id = "botLoading";
-    loadingBubble.className = "bg-slate-800/60 text-slate-400 p-3 rounded-xl max-w-[85%] border border-slate-700/50 italic";
-    loadingBubble.innerText = "RuslanAI düşünür...";
-    messagesContainer.appendChild(loadingBubble);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    // Yüklənir göstəricisi
+    const loadingDiv = document.createElement("div");
+    loadingDiv.id = "botLoading";
+    loadingDiv.className = "bg-slate-800/60 text-slate-400 p-3 rounded-xl max-w-[85%] border border-slate-700/50 italic text-xs animate-pulse";
+    loadingDiv.innerText = "Cavab yazılır...";
+    chatMessages.appendChild(loadingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Server soyuqdursa (Render pulsuz plan) 5 saniyədən sonra xəbərdarlıq çıxarırıq
+    const wakeTimer = setTimeout(() => {
+        const node = document.getElementById("botLoading");
+        if (node) node.innerText = "Server oyanır, ilk sorğu 30-60 saniyə çəkə bilsin...";
+    }, 5000);
 
     try {
-        const response = await fetch(`${BACKEND_URL}/api/chat`, {
+        const response = await fetch(API_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({ message: messageText })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: message })
         });
 
-        const loadingNode = document.getElementById("botLoading");
-        if (loadingNode) loadingNode.remove();
+        clearTimeout(wakeTimer);
 
-        if (!response.ok) {
-            throw new Error(`Server status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error("Network response was not ok");
 
         const data = await response.json();
         
-        // Backend-dən gələn cavabı çıxarırıq (rag.py dict qaytarır: {"answer": "...", ...})
-        let answerText = "";
-        if (typeof data === "string") {
-            answerText = data;
-        } else if (typeof data === "object" && data !== null) {
-            answerText = data.answer || data.response || data.reply || data.message || JSON.stringify(data);
-        }
+        // Yüklənir mesajını silirik
+        if (loadingDiv) loadingDiv.remove();
 
-        const botBubble = document.createElement("div");
-        botBubble.className = "bg-slate-800/60 text-slate-200 p-3 rounded-xl max-w-[85%] border border-slate-700/50";
-        botBubble.innerText = answerText || "Məlumat tapılmadı.";
-        messagesContainer.appendChild(botBubble);
+        // Botun cavabı
+        const botDiv = document.createElement("div");
+        botDiv.className = "bg-slate-800/60 text-slate-200 p-3 rounded-xl max-w-[85%] border border-slate-700/50";
+        botDiv.innerText = data.response;
+        chatMessages.appendChild(botDiv);
 
     } catch (error) {
-        console.error("Chat Error:", error);
-        const loadingNode = document.getElementById("botLoading");
-        if (loadingNode) loadingNode.remove();
+        clearTimeout(wakeTimer);
+        if (loadingDiv) loadingDiv.remove();
 
-        const errorBubble = document.createElement("div");
-        errorBubble.className = "bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[85%] border border-red-500/30";
-        errorBubble.innerText = "Sistem oyanır və ya xəta baş verdi. Zəhmət olmasa bir neçə saniyə sonra yenidən cəhd edin.";
-        messagesContainer.appendChild(errorBubble);
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "bg-red-500/10 text-red-400 p-3 rounded-xl max-w-[85%] border border-red-500/20 text-xs";
+        errorDiv.innerText = "Bağlantı xətası baş verdi və ya server cavab vermədi.";
+        chatMessages.appendChild(errorDiv);
+    } finally {
+        window.chatBusy = false;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
-    
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }

@@ -1,3 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruslan Cabbarov | Model Validation & Data Science</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 900: '#0a0f1d', 800: '#0f172a', 700: '#1e293b', 600: '#334155' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0f1d;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        .glass-card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass-card-hover:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
+        }
+        .radial-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 70%);
+        }
+        @keyframes spinSlow { to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spinSlow 8s linear infinite; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0f1d; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+    </style>
+</head>
+
+<body class="relative min-h-screen">
+
+    <!-- Fon effektləri -->
+    <div class="fixed inset-0 pointer-events-none z-0 radial-glow"></div>
+    <div class="fixed top-1/4 -left-48 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed bottom-1/4 -right-48 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Əsas konteyner: bunu bağlayan </div> footer-dən sonrakıdır -->
+    <div class="relative z-10 max-w-6xl mx-auto px-6">
+
+        <!-- HEADER / HERO SECTION -->
+        <header class="py-12 border-b border-slate-800/80">
 <!-- HEADER / HERO SECTION -->
         <header class="py-12 border-b border-slate-800/80">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
