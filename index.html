@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ruslan Cabbarov | Model Validation & Data Science</title>
- 
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'], mono: ['Fira Code','monospace'] } } } }
@@ -13,21 +13,21 @@ tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
- 
+
 <style>
 body{font-family:'Inter',sans-serif;background:linear-gradient(#0a0f1d,#0d1b2e 70%,#10263d);color:#f8fafc;overflow-x:hidden;padding-bottom:80px;min-height:100vh}
 html.light body{background:linear-gradient(#e3f0ff,#f6faff 60%,#fff);color:#0f172a}
- 
+
 .glass-card{background:rgba(15,23,42,.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 50px rgba(0,0,0,.45)}
 html.light .glass-card{background:rgba(255,255,255,.8);border-color:rgba(15,23,42,.08);box-shadow:0 12px 30px rgba(30,64,175,.08)}
 .card-hover{transition:transform .3s,border-color .3s,box-shadow .3s}
 .card-hover:hover{transform:translateY(-5px);border-color:var(--c);box-shadow:0 10px 30px -10px var(--c)}
 html.light .card-hover:hover{border-color:var(--l);box-shadow:0 10px 30px -12px var(--l)}
- 
+
 .acc{color:var(--c)} html.light .acc{color:var(--l)}
 .tag{padding:.25rem .75rem;border-radius:.5rem;font-size:.75rem;background:rgba(148,163,184,.15);color:var(--c)}
 html.light .tag{background:rgba(15,23,42,.06);color:var(--l)}
- 
+
 /* light-mode overrides for classes used by markup and chat.js */
 html.light .text-slate-100,html.light .text-slate-200{color:#0f172a}
 html.light .text-slate-400,html.light .text-slate-500{color:#475569}
@@ -37,11 +37,11 @@ html.light .border-slate-800,html.light .border-slate-800\/80,html.light .border
 html.light .bg-slate-800\/60{background:#e8eef7}
 html.light .bg-slate-900\/90{background:rgba(255,255,255,.92)}
 html.light .bg-slate-950{background:#fff}
- 
+
 #snow{position:fixed;inset:0;z-index:1;pointer-events:none}
 #ground{position:fixed;left:0;right:0;bottom:0;height:64px;z-index:20;pointer-events:none;background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(255,255,255,.4),transparent 75%)}
 html.light #ground{background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(147,197,253,.55),transparent 75%)}
- 
+
 /* snowman */
 #snowman{position:fixed;left:0;bottom:4px;z-index:50;width:84px;cursor:pointer;will-change:transform}
 #snowman svg{display:block;width:84px;height:auto;overflow:visible;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3))}
@@ -58,27 +58,37 @@ html.light #ground{background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(
 #snowman svg.jump{animation:jump .6s}
 @keyframes jump{40%{transform:translateY(-28px)}}
 #smBubble{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;padding:.4rem .75rem;border-radius:.75rem;font-size:.75rem;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none;background:#fff;color:#0f172a;box-shadow:0 6px 16px rgba(0,0,0,.25)}
- 
+
+/* profile photo lightbox */
+#avatarBtn{cursor:zoom-in;transition:transform .2s}
+#avatarBtn:hover{transform:scale(1.04)}
+#avatarBtn:focus-visible{outline:2px solid #34d399;outline-offset:3px}
+#lightbox{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+#lightbox.open{opacity:1;visibility:visible}
+#lightbox img{width:min(86vw,80vh,480px);aspect-ratio:1;object-fit:cover;object-position:top;border-radius:50%;border:4px solid rgba(16,185,129,.85);box-shadow:0 30px 80px rgba(0,0,0,.6);transform:scale(.6);transition:transform .3s cubic-bezier(.2,.9,.3,1.2)}
+#lightbox.open img{transform:scale(1)}
+#lbClose{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:1.1rem}
+
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0a0f1d}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}
-@media (prefers-reduced-motion:reduce){.walking *{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.walking *{animation:none!important}#lightbox,#lightbox img{transition:none}}
 </style>
 </head>
- 
+
 <body>
 <canvas id="snow"></canvas>
 <div id="ground"></div>
- 
+
 <button id="themeBtn" onclick="toggleTheme()" aria-label="Switch theme"
   class="fixed top-4 right-4 z-50 w-11 h-11 rounded-full glass-card flex items-center justify-center text-slate-200">
   <i id="themeIcon" class="fa-solid fa-sun"></i>
 </button>
- 
+
 <div class="relative z-10 max-w-6xl mx-auto px-6">
- 
+
   <header class="py-14 border-b border-slate-800/80">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
       <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left flex-1 min-w-0">
-        <div class="relative w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-emerald-500/80 shadow-xl shrink-0 bg-slate-900">
+        <div id="avatarBtn" role="button" tabindex="0" aria-label="View profile photo" onclick="openLightbox()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openLightbox()}" class="relative w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-emerald-500/80 shadow-xl shrink-0 bg-slate-900">
           <img src="assets/images/profile.jpg" alt="Ruslan Cabbarov" class="w-full h-full object-cover scale-125 object-top">
         </div>
         <div class="flex-1 min-w-0">
@@ -99,18 +109,18 @@ html.light #ground{background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(
       </div>
     </div>
   </header>
- 
+
   <section id="skills" class="py-16 border-b border-slate-800/80">
     <h2 class="text-3xl font-bold text-slate-100 mb-10">Skills & competencies</h2>
     <div id="skillsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
   </section>
- 
+
   <section id="projects" class="py-16 border-b border-slate-800/80">
     <h2 class="text-3xl font-bold text-slate-100">Featured projects</h2>
     <p class="text-slate-400 text-sm mt-3 mb-10 max-w-2xl">Projects across data science, machine learning, credit risk analytics, and software development.</p>
     <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
   </section>
- 
+
   <section id="contact" class="py-16 border-b border-slate-800/80">
     <div class="text-center mb-10">
       <h2 class="text-3xl font-bold text-slate-100">Contact</h2>
@@ -122,10 +132,16 @@ html.light #ground{background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(
       <a href="https://github.com/ruslancabbarov" target="_blank" rel="noopener noreferrer" class="glass-card card-hover px-6 py-4 rounded-xl flex items-center gap-3 text-slate-200" style="--c:#a78bfa;--l:#6d28d9"><i class="fa-brands fa-github acc text-xl"></i><span>GitHub profile</span></a>
     </div>
   </section>
- 
+
   <footer class="py-8 text-center text-xs text-slate-500"><p>© 2026 Ruslan Cabbarov. All rights reserved.</p></footer>
 </div>
- 
+
+<!-- Profile photo lightbox -->
+<div id="lightbox" onclick="closeLightbox()" aria-hidden="true">
+  <button id="lbClose" onclick="closeLightbox()" aria-label="Close photo"><i class="fa-solid fa-xmark"></i></button>
+  <img src="assets/images/profile.jpg" alt="Ruslan Cabbarov" onclick="event.stopPropagation()">
+</div>
+
 <!-- Snowman chatbot -->
 <div id="snowman" role="button" tabindex="0" aria-label="Open chat with the snowman assistant">
   <div id="smBubble"></div>
@@ -150,7 +166,7 @@ html.light #ground{background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(
     </svg>
   </div>
 </div>
- 
+
 <div id="chatbotModal" class="fixed bottom-28 right-4 z-50 hidden w-[calc(100vw-2rem)] sm:w-96 glass-card border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[450px]">
   <div class="bg-slate-900/90 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
     <div class="flex items-center gap-2"><span aria-hidden="true">⛄</span><span class="font-bold text-slate-200 text-sm">RuslanAI Assistant</span></div>
@@ -164,7 +180,7 @@ html.light #ground{background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(
     <button onclick="sendMessage()" aria-label="Send" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2 rounded-xl font-semibold text-sm"><i class="fa-solid fa-paper-plane"></i></button>
   </div>
 </div>
- 
+
 <script>
 /* ---------- Content (edit here) ---------- */
 const SKILLS = [
@@ -181,13 +197,13 @@ const PROJECTS = [
  {k:'GenAI & web',i:'fa-robot',c:'#f472b6',l:'#be185d',t:'AI Portfolio & RAG Chatbot',d:'Personal website with a FastAPI + OpenAI RAG chatbot hosted on Render and a responsive Vercel frontend.',tags:['FastAPI','OpenAI API','RAG'],g:'Portfolio'}
 ];
 const GH = 'https://github.com/ruslancabbarov/';
- 
+
 document.getElementById('skillsGrid').innerHTML = SKILLS.map(s => `
  <div class="glass-card card-hover p-6 rounded-2xl" style="--c:${s.c};--l:${s.l}">
   <div class="flex items-center gap-3 mb-4"><i class="fa-solid ${s.i} acc text-xl"></i><h3 class="text-lg font-bold text-slate-100">${s.t}</h3></div>
   <ul class="text-slate-400 text-sm space-y-2">${s.items.map(x => `<li>${x}</li>`).join('')}</ul>
  </div>`).join('');
- 
+
 document.getElementById('projectsGrid').innerHTML = PROJECTS.map(p => `
  <article class="glass-card card-hover p-6 rounded-2xl flex flex-col" style="--c:${p.c};--l:${p.l}">
   <div class="flex items-center justify-between mb-4"><span class="text-xs font-mono acc">${p.k}</span><i class="fa-solid ${p.i} acc text-lg"></i></div>
@@ -196,7 +212,7 @@ document.getElementById('projectsGrid').innerHTML = PROJECTS.map(p => `
   <div class="flex flex-wrap gap-2 mb-6">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
   <a href="${GH}${p.g}" target="_blank" rel="noopener noreferrer" class="mt-auto text-sm font-semibold acc hover:underline"><i class="fa-brands fa-github mr-2"></i>GitHub repository</a>
  </article>`).join('');
- 
+
 /* ---------- Theme ---------- */
 function applyTheme(light){
   document.documentElement.classList.toggle('light', light);
@@ -206,7 +222,7 @@ function applyTheme(light){
 }
 function toggleTheme(){ applyTheme(!document.documentElement.classList.contains('light')); }
 try { applyTheme(localStorage.getItem('theme') === 'light'); } catch(e) {}
- 
+
 /* ---------- Snow ---------- */
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv = document.getElementById('snow'), cx = cv.getContext('2d');
@@ -230,19 +246,19 @@ function snowTick(){
   requestAnimationFrame(snowTick);
 }
 if (!reduce) snowTick();
- 
+
 /* ---------- Snowman: wanders along the bottom, click to chat ---------- */
 const sm = document.getElementById('snowman'), flip = document.getElementById('smFlip'),
       bub = document.getElementById('smBubble'), svg = document.getElementById('smSvg');
 let chatOpen = false, hover = false, px = Math.max(20, innerWidth-200), tx = px, idle = 1.5, last = 0;
 sm.addEventListener('mouseenter', () => hover = true);
 sm.addEventListener('mouseleave', () => hover = false);
- 
+
 function say(t, ms = 3200){ bub.textContent = t; bub.style.opacity = 1; setTimeout(() => bub.style.opacity = 0, ms); }
 const HELLOS = ['Salam! Mənə toxun 👋', 'Sualın var? ❄', 'Ruslan haqqında soruş!', 'Qar yağır, mən gəzirəm ⛄'];
 setInterval(() => { if (!chatOpen && bub.style.opacity !== '1') say(HELLOS[Math.floor(Math.random()*HELLOS.length)]); }, 9000);
 setTimeout(() => say(HELLOS[0]), 1500);
- 
+
 function walk(ts){
   const dt = Math.min((ts-last)/1000 || 0, .05); last = ts;
   const maxX = Math.max(20, innerWidth-90);
@@ -262,7 +278,7 @@ function walk(ts){
   requestAnimationFrame(walk);
 }
 requestAnimationFrame(walk);
- 
+
 function toggleSnowChat(){
   const m = document.getElementById('chatbotModal');
   m.classList.toggle('hidden');
@@ -272,10 +288,15 @@ function toggleSnowChat(){
 function snowmanClick(){ svg.classList.add('jump'); setTimeout(() => svg.classList.remove('jump'), 600); toggleSnowChat(); }
 sm.addEventListener('click', snowmanClick);
 sm.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); snowmanClick(); } });
+
+/* ---------- Profile photo lightbox ---------- */
+const lb = document.getElementById('lightbox');
+function openLightbox(){ lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; document.getElementById('lbClose').focus(); }
+function closeLightbox(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; document.getElementById('avatarBtn').focus(); }
+addEventListener('keydown', e => { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
 </script>
- 
+
 <!-- Chat logic: sendMessage() lives here -->
 <script src="assets/js/chat.js"></script>
 </body>
 </html>
- 
