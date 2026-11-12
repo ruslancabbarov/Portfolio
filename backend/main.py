@@ -8,12 +8,13 @@ from rag import get_rag_response
 
 app = FastAPI(title="Ruslan Portfolio RAG API")
 
-origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "*").split(",")]
+origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_methods=["POST", "GET"],
+    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_methods=["POST", "GET", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -27,7 +28,17 @@ def health():
     return {"status": "ok"}
 
 
+@app.get("/debug")
+def debug():
+    import rag
+    return {
+        "provider": rag.PROVIDER,
+        "model": rag.MODEL,
+        "documents_loaded": len(rag.DOCUMENTS),
+        "last_error": rag.LAST_ERROR,
+    }
+
+
 @app.post("/api/chat")
 def chat(req: ChatRequest):
-    answer = get_rag_response(req.message.strip())
-    return {"answer": answer}
+    return {"answer": get_rag_response(req.message.strip())}
